@@ -599,167 +599,98 @@ img {
   background-color: rgba(15, 21, 36, 0.5);
 }
 
-.testimonials-container {
-  /* text-align: center; */
-  /* Adjust as needed */
-  position: relative;
-  /* Needed for slider nav absolute positioning */
-}
-
-/* Restore Slider Styles */
-.testimonials-slider {
-  position: relative;
-  margin-top: 3rem;
-  /* width: 100%; */
-  /* Removed for container-bound width */
-  overflow: hidden;
-}
-
-.testimonial-cards {
-  display: flex;
-  /* Add overflow hidden here to clip only the cards */
-  overflow: hidden;
-  gap: 2rem;
-  /* Restore gap */
-  /* Add transition for smooth sliding */
-  transition: transform 0.5s ease-in-out;
+.testimonial-grid {
+  column-count: 3;
+  column-gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .testimonial-card {
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: var(--border-radius);
   padding: 2rem;
-  text-align: left;
-  flex: 0 0 350px;
-  /* Fixed width for desktop */
-  flex-shrink: 0;
-  /* Kept from previous, good for consistency */
-  min-width: 0;
-  box-sizing: border-box;
+  transition: var(--transition);
+  margin-bottom: 1.5rem;
+  break-inside: avoid-column;
+  box-shadow: var(--box-shadow);
 }
 
-/* Style for the content inside the card (from previous attempt) */
+.testimonial-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
 .testimonial-quote {
-  font-size: 1.1rem;
+  font-style: italic;
   margin-bottom: 1.5rem;
   color: var(--text-muted);
-  font-style: italic;
+  font-size: 1rem;
 }
 
 .testimonial-author {
-  margin-top: 1.5rem;
   display: flex;
-  /* Use flex to position image and info */
   align-items: center;
-  /* Vertically align items */
-  gap: 1rem;
-  /* Space between image and info */
+  margin-top: auto;
 }
 
-/* New styles for author image */
 .author-image {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  /* Make it round */
-  overflow: hidden;
-  /* Ensure image stays within circle */
-  flex-shrink: 0;
-  /* Prevent image from shrinking */
+  margin-right: 1rem;
 }
 
 .author-image img {
-  width: 100%;
-  height: 100%;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
   object-fit: cover;
-  /* Cover the area without distortion */
+  border: 2px solid var(--primary-color);
 }
 
-/* Container for the text part of the author section */
-.author-info {
-  /* No specific styles needed unless further layout adjustments are required */
-}
+.author-info {}
 
 .author-tag {
   display: inline-block;
-  background-color: rgba(255, 107, 0, 0.1);
-  color: var(--primary-color);
+  background-color: var(--primary-color);
+  color: var(--text-light);
   padding: 0.25rem 0.75rem;
   border-radius: 50px;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
-  /* Adjusted margin */
   text-transform: uppercase;
 }
 
 .author-name {
+  font-size: 1.1rem;
+  font-weight: 700;
   margin-bottom: 0.25rem;
-  font-size: 1.2rem;
-  color: var(--text-light);
 }
 
 .author-role {
-  margin-bottom: 0;
-  color: var(--text-muted);
   font-size: 0.9rem;
+  color: var(--text-muted);
 }
 
-/* Restore Dots Styles */
-/* Restored comment */
-
-.testimonial-dots {
-  display: flex;
-  justify-content: center;
-  margin-top: 2rem;
-  gap: 0.5rem;
+/* Style for the load more button if needed, though btn-secondary should cover it */
+#loadMoreTestimonials {
+  display: block;
+  margin: 2rem auto 0;
 }
 
-.dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.2);
-  cursor: pointer;
-  transition: var(--transition);
+/* Responsive adjustments for the grid */
+@media (max-width: 992px) {
+  .testimonial-grid {
+    column-count: 2;
+  }
 }
 
-.dot.active {
-  background-color: var(--primary-color);
-}
+@media (max-width: 768px) {
+  .testimonial-grid {
+    column-count: 1;
+  }
 
-/* Restore Slider Nav Button Styles */
-/* Restored comment */
-
-.slider-nav {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.1);
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-light);
-  font-size: 1rem;
-  cursor: pointer;
-  transition: var(--transition);
-  z-index: 10;
-}
-
-.slider-nav:hover {
-  background-color: var(--primary-color);
-}
-
-.prev-btn {
-  left: -20px;
-}
-
-.next-btn {
-  right: -20px;
+  .testimonial-card {
+    padding: 1.5rem;
+  }
 }
 
 /* Pricing Section */
@@ -1029,6 +960,7 @@ img {
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
   margin-top: 2rem;
+  margin-bottom: 3rem;
 }
 
 .package-card {
@@ -1132,82 +1064,69 @@ img {
   font-size: 1.1rem;
 }
 
-/* Contact Section */
+/* Contact Section - Erneute Überarbeitung für 1:1 Layout */
 .contact {
   position: relative;
+  padding-bottom: 5rem;
+  /* Mehr Abstand unten? */
 }
 
 .contact-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 3rem;
+  gap: 4rem;
+  /* Mehr Abstand zwischen Spalten */
+  margin-top: 3rem;
+  align-items: start;
+  /* Spalten oben ausrichten */
 }
 
-.contact-info {
-  text-align: left;
-}
-
-.contact-info p {
-  color: var(--text-muted);
-  margin-bottom: 2rem;
-}
-
-.contact-methods {
-  margin-bottom: 2rem;
-}
-
-.contact-method {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.contact-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--gradient);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 1rem;
-  color: var(--text-light);
-}
-
-.contact-text {
-  color: var(--text-muted);
+/* Formular-Container (linke Spalte) */
+.contact-form-container {
+  /* Keine spezifischen Styles */
 }
 
 .contact-form {
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: var(--border-radius);
-  padding: 2rem;
+  padding: 2.5rem;
+  /* Padding beibehalten oder leicht reduzieren? 2.5rem wirkt ok */
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
+  /* Etwas weniger Abstand zwischen Feldern */
 }
 
 .form-label {
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.6rem;
+  /* Etwas mehr Abstand zum Feld */
   font-weight: 500;
+  /* Gewicht ggf. anpassen */
+  font-size: 0.95rem;
+  /* Größe ggf. anpassen */
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .form-control {
   width: 100%;
-  padding: 0.75rem 1rem;
-  background-color: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: var(--border-radius);
+  padding: 0.8rem 1.2rem;
+  /* Mehr horizontales Padding? */
+  background-color: rgba(255, 255, 255, 0.08);
+  /* Hintergrund leicht anpassen? */
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  /* Rand leicht anpassen? */
+  border-radius: 8px;
   color: var(--text-light);
   transition: var(--transition);
+  font-size: 1rem;
 }
 
 .form-control:focus {
   outline: none;
   border-color: var(--primary-color);
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 textarea.form-control {
@@ -1215,40 +1134,189 @@ textarea.form-control {
   resize: vertical;
 }
 
-/* Footer */
-.footer {
-  background-color: rgba(15, 21, 36, 0.8);
-  padding-top: 5rem;
+.contact-form button[type="submit"] {
+  margin-top: 1.5rem;
+  /* Abstand vor dem Button */
 }
 
+/* Info-Container (rechte Spalte) */
+.contact-info {
+  text-align: left;
+  padding-top: 0.5rem;
+  /* Weniger Abstand oben als Formular? */
+}
+
+.contact-info-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 2.5rem;
+  /* Mehr Abstand zwischen Items */
+  gap: 1.2rem;
+  /* Weniger horizontaler Abstand? */
+}
+
+.contact-info-item i {
+  font-size: 1.6rem;
+  /* Icon-Größe leicht reduziert? */
+  color: var(--primary-color);
+  margin-top: 0.3rem;
+  /* Vertikale Ausrichtung justieren */
+  width: 30px;
+  text-align: center;
+  flex-shrink: 0;
+  /* Verhindert Schrumpfen des Icons */
+}
+
+.contact-info-item h4 {
+  margin-bottom: 0.3rem;
+  /* Weniger Abstand unter H4 */
+  font-size: 1.15rem;
+  color: var(--text-light);
+  font-weight: 600;
+}
+
+.contact-info-item p {
+  color: var(--text-muted);
+  margin-bottom: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  /* Größerer Zeilenabstand? */
+}
+
+
+/* Footer - Keine Änderungen hier, da er passte */
+.footer {
+  background-color: #0A0F1A;
+  /* Dunklerer Hintergrund wie Vorlage? */
+  padding-top: 5rem;
+  padding-bottom: 1rem;
+  /* Weniger Abstand unten? */
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  /* Rand oben */
+}
+
+/* Oberer Teil des Footers (Logo/Links) */
+.footer-content {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  /* Spaltenaufteilung angepasst: Logo breiter */
+  gap: 3rem;
+  margin-bottom: 3rem;
+  /* Abstand zum unteren Teil */
+}
+
+.footer-logo {
+  /* Container für Logo und Beschreibung */
+}
+
+.footer-logo img {
+  height: 40px;
+  /* Höhe beibehalten */
+  margin-bottom: 1rem;
+}
+
+.footer-logo p {
+  /* Beschreibungstext unter dem Logo */
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+/* Container für die drei Link-Spalten */
+.footer-links {
+  display: contents;
+  /* Lässt die Spalten direkt ins Grid vom Parent (.footer-content) */
+}
+
+.footer-links-column {
+  /* Styles für jede Spalte */
+}
+
+.footer-links-column h4 {
+  font-size: 1.1rem;
+  /* Etwas kleinere Überschrift */
+  color: var(--text-light);
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.footer-links-column ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links-column li {
+  margin-bottom: 0.8rem;
+}
+
+.footer-links-column a {
+  color: var(--text-muted);
+  transition: var(--transition);
+  font-size: 0.95rem;
+}
+
+.footer-links-column a:hover {
+  color: var(--primary-color);
+  padding-left: 0.5rem;
+}
+
+/* Unterer Teil des Footers (Copyright/Social) */
+.footer-bottom {
+  text-align: center;
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  /* Flexbox für nebeneinander */
+  justify-content: space-between;
+  /* Elemente auseinander schieben */
+  align-items: center;
+}
+
+.footer-bottom p {
+  color: var(--text-muted);
+  margin-bottom: 0;
+  font-size: 0.9rem;
+}
+
+.footer-bottom .social-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.footer-bottom .social-links a {
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  /* Größe der Social Icons */
+  transition: var(--transition);
+}
+
+.footer-bottom .social-links a:hover {
+  color: var(--primary-color);
+  transform: translateY(-2px);
+}
+
+
+/* Alte Footer-Styles entfernen/auskommentieren falls nötig */
+/*
 .footer-container {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr;
   gap: 3rem;
 }
-
 .footer-info {
   text-align: left;
 }
-
-.footer-logo {
-  margin-bottom: 1.5rem;
-}
-
-.footer-logo img {
-  height: 40px;
-}
-
 .footer-about {
   color: var(--text-muted);
   margin-bottom: 1.5rem;
 }
-
 .footer-social {
   display: flex;
   gap: 1rem;
 }
-
 .social-icon {
   width: 40px;
   height: 40px;
@@ -1259,46 +1327,29 @@ textarea.form-control {
   justify-content: center;
   transition: var(--transition);
 }
-
 .social-icon:hover {
   background: var(--gradient);
   transform: translateY(-3px);
 }
-
 .footer-title {
   font-size: 1.2rem;
   margin-bottom: 1.5rem;
 }
-
 .footer-links {
   list-style: none;
 }
-
 .footer-links li {
   margin-bottom: 0.75rem;
 }
-
 .footer-links a {
   color: var(--text-muted);
   transition: var(--transition);
 }
-
 .footer-links a:hover {
   color: var(--primary-color);
   padding-left: 0.5rem;
 }
-
-.footer-bottom {
-  text-align: center;
-  padding: 2rem 0;
-  margin-top: 3rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.footer-bottom p {
-  color: var(--text-muted);
-  margin-bottom: 0;
-}
+*/
 
 /* Back to Top Button */
 .back-to-top {
@@ -1543,6 +1594,90 @@ textarea.form-control {
     margin-bottom: 2rem;
   }
 }
+
+/* Contact Section */
+.contact {
+  position: relative;
+}
+
+.contact-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+.contact-info h2 {
+  margin-bottom: 2rem;
+}
+
+.contact-details {
+  margin-top: 2rem;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.contact-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+  color: var(--text-light);
+}
+
+.contact-text h4 {
+  margin-bottom: 0.25rem;
+}
+
+.contact-text p {
+  color: var(--text-muted);
+  margin-bottom: 0;
+}
+
+.contact-form {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: var(--border-radius);
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-light);
+  transition: var(--transition);
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+textarea.form-control {
+  min-height: 150px;
+  resize: vertical;
+}
+
 
 
 /* KI Extension Styles */

@@ -66,25 +66,22 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Pricing tabs
-    const pricingTabs = document.querySelectorAll('.pricing-tab');
-    const packageFeatures = document.querySelectorAll('.package-features');
+    // Pricing tabs (jetzt Package Cards Direktwahl)
+    const packageCards = document.querySelectorAll('.package-card'); // Geändert von pricingTabs zu packageCards
 
-    if (pricingTabs.length > 0) {
-        pricingTabs.forEach(tab => {
-            tab.addEventListener('click', function () {
+    if (packageCards.length > 0) {
+        packageCards.forEach(card => { // Geändert von tab zu card
+            card.addEventListener('click', function () {
                 const packageType = this.getAttribute('data-package');
+                const packageName = this.querySelector('h3').textContent;
 
-                pricingTabs.forEach(tab => tab.classList.remove('active'));
-                packageFeatures.forEach(features => features.classList.remove('active'));
-
+                packageCards.forEach(c => c.classList.remove('active'));
                 this.classList.add('active');
-                document.querySelector(`.${packageType}-features`).classList.add('active');
 
-                // Update summary
-                document.getElementById('summaryPackage').textContent = this.querySelector('h3').textContent;
+                // Update summary immediately
+                document.getElementById('summaryPackage').textContent = packageName;
 
-                // Update pricing based on package
+                // Update pricing based on new package selection
                 updatePricing();
             });
         });
@@ -103,30 +100,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.getElementById('summaryDuration').textContent = `${duration} Monate`;
 
                 // Update pricing based on duration
-                updatePricing();
-            });
-        });
-    }
-
-    // Package selection
-    const packageButtons = document.querySelectorAll('.package-select');
-
-    if (packageButtons.length > 0) {
-        packageButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                const packageType = this.getAttribute('data-package');
-                const packageName = this.parentElement.querySelector('h3').textContent;
-
-                // Update active state
-                packageButtons.forEach(btn => {
-                    btn.parentElement.classList.remove('active');
-                });
-                this.parentElement.classList.add('active');
-
-                // Update summary
-                document.getElementById('summaryPackage').textContent = packageName;
-
-                // Update pricing based on package
                 updatePricing();
             });
         });
@@ -181,55 +154,90 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Pricing calculator
     function updatePricing() {
-        // Get current package
-        const activePackage = document.querySelector('.pricing-tab.active').getAttribute('data-package');
+        const activePackageCard = document.querySelector('.package-card.active');
+        if (!activePackageCard) {
+            console.error("Kein aktives Paket für Preisberechnung gefunden.");
+            return;
+        }
+        const activePackageType = activePackageCard.getAttribute('data-package');
 
-        // Get current duration and discount
-        const activeDuration = document.querySelector('.duration-option.active');
-        const duration = parseInt(activeDuration.getAttribute('data-duration'));
-        const discount = parseInt(activeDuration.getAttribute('data-discount'));
+        const activeDurationOption = document.querySelector('.duration-option.active');
+        if (!activeDurationOption) {
+            console.error("Keine aktive Laufzeit für Preisberechnung gefunden.");
+            return;
+        }
+        const duration = parseInt(activeDurationOption.getAttribute('data-duration'));
+        // Rabatt direkt von der Vorlage ablesen (0, 10, 20)
+        let discountPercentage = 0;
+        if (duration === 6) discountPercentage = 10;
+        if (duration === 12) discountPercentage = 20;
 
-        // Get current DM count
+        const dmSlider = document.getElementById('dmSlider');
+        if (!dmSlider) {
+            console.error("DM Slider nicht gefunden.");
+            return;
+        }
         const dmCount = parseInt(dmSlider.value);
 
-        // Base prices per package
-        let basePrice, toolCosts, setupCosts;
+        let basePricePerDM, toolCosts, setupCosts;
 
-        if (activePackage === 'basic') {
-            basePrice = 0.5; // € per DM
+        // Preise basierend auf der Vorlage für "Premium Connect"
+        // und Annahmen für die anderen Pakete, da diese nicht detailliert sind.
+        if (activePackageType === 'premium') { // Premium Connect
+            basePricePerDM = (1575 - 125) / 2250; // (Monatlicher Preis - Tool Kosten) / DMs
             toolCosts = 125;
             setupCosts = 600;
-        } else if (activePackage === 'premium') {
-            basePrice = 0.7; // € per DM
-            toolCosts = 175;
-            setupCosts = 800;
-        } else if (activePackage === 'enterprise') {
-            basePrice = 0.9; // € per DM
-            toolCosts = 225;
-            setupCosts = 1000;
+        } else if (activePackageType === 'audio') { // Audio Impact - Annahme
+            basePricePerDM = 0.70; // Annahme, basierend auf altem mittlerem Paket
+            toolCosts = 175;     // Annahme
+            setupCosts = 800;      // Annahme
+        } else if (activePackageType === 'ultimate') { // Ultimate Conversion - Annahme
+            basePricePerDM = 0.85; // Annahme, basierend auf altem höchsten Paket (leicht angepasst)
+            toolCosts = 225;     // Annahme
+            setupCosts = 1000;     // Annahme
+        } else {
+            console.error("Unbekannter Pakettyp: ", activePackageType);
+            return;
         }
 
-        // Calculate monthly price
-        let monthlyPrice = (dmCount * basePrice) + toolCosts;
+        let monthlyDmCost = dmCount * basePricePerDM;
+        let currentMonthlyPrice = monthlyDmCost + toolCosts;
 
-        // Apply discount if applicable
-        if (discount > 0) {
-            monthlyPrice = monthlyPrice * (1 - (discount / 100));
+        if (discountPercentage > 0) {
+            currentMonthlyPrice = currentMonthlyPrice * (1 - (discountPercentage / 100));
         }
 
-        // Calculate total price
-        const totalPrice = (monthlyPrice * duration) + setupCosts;
+        const totalSetupCosts = setupCosts; // Bleibt einmalig
+        const overallTotalPrice = (currentMonthlyPrice * duration) + totalSetupCosts;
 
-        // Update summary
-        document.getElementById('summaryToolCosts').textContent = `${toolCosts} € pro Monat`;
-        document.getElementById('summarySetupCosts').textContent = `${setupCosts} € (einmalig)`;
-        document.getElementById('summaryMonthlyPrice').textContent = `${formatNumber(monthlyPrice.toFixed(0))} € pro Monat`;
-        document.getElementById('summaryTotalPrice').textContent = `${formatNumber(totalPrice.toFixed(0))} €`;
+        document.getElementById('summaryPackage').textContent = activePackageCard.querySelector('h3').textContent;
+        document.getElementById('summaryDuration').textContent = `${duration} Monate`;
+        document.getElementById('summaryDMs').textContent = `${formatNumber(dmCount)} DMs pro Monat`;
+        document.getElementById('summaryToolCosts').textContent = `${toolCosts.toFixed(0)} € pro Monat`;
+        document.getElementById('summarySetupCosts').textContent = `${totalSetupCosts.toFixed(0)} € (einmalig)`;
+        document.getElementById('summaryMonthlyPrice').textContent = `${formatNumber(currentMonthlyPrice.toFixed(0))} € pro Monat`;
+        document.getElementById('summaryTotalPrice').textContent = `${formatNumber(overallTotalPrice.toFixed(0))} €`;
     }
 
-    // Initialize pricing on page load
-    if (document.querySelector('.pricing-tab')) {
+    // Initialize pricing on page load - Sicherstellen, dass dies nach allen Element-Definitionen geschieht
+    // und dass initiale Werte im HTML korrekt sind (z.B. erstes Paket 'active')
+    if (document.querySelector('.package-card.active') && document.querySelector('.duration-option.active') && document.getElementById('dmSlider')) {
         updatePricing();
+    } else {
+        // Fallback, falls initiale Auswahl nicht im HTML gesetzt ist oder Elemente fehlen
+        // Setze Standardauswahl und update Preise
+        const firstPackage = document.querySelector('.package-card');
+        if (firstPackage && !document.querySelector('.package-card.active')) {
+            firstPackage.classList.add('active');
+        }
+        const firstDuration = document.querySelector('.duration-option');
+        if (firstDuration && !document.querySelector('.duration-option.active')) {
+            firstDuration.classList.add('active');
+        }
+        // Trigger updatePricing, wenn alle Elemente vorhanden sind
+        if (document.querySelector('.package-card.active') && document.querySelector('.duration-option.active') && document.getElementById('dmSlider')) {
+            updatePricing();
+        }
     }
 
     // Format numbers with thousand separator
@@ -480,169 +488,219 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Testimonial slider
-    const testimonialSlider = document.querySelector('.testimonials-slider');
-    const testimonialCardsContainer = document.querySelector('.testimonial-cards');
-    const testimonialCards = document.querySelectorAll('.testimonial-card');
-    const testimonialDotsContainer = document.querySelector('.testimonial-dots');
-    const prevBtn = document.querySelector('.prev-btn');
-    const nextBtn = document.querySelector('.next-btn');
-    let currentSlide = 0;
-    let visibleSlides = 3; // Default for desktop
-    let totalSlides = testimonialCards.length;
-    let autoSlideInterval;
+    // Testimonial "Load More" functionality
+    const testimonialGrid = document.querySelector('.testimonial-grid');
+    if (testimonialGrid) {
+        const testimonialCards = Array.from(testimonialGrid.querySelectorAll('.testimonial-card')); // Convert to Array
+        const loadMoreButton = document.getElementById('loadMoreTestimonials');
+        const showLessButton = document.getElementById('showLessTestimonials'); // Get the new button
+        const initialShowCount = 3;
 
-    function updateSliderConfig() {
-        if (window.innerWidth < 768) {
-            visibleSlides = 1;
-        } else if (window.innerWidth < 992) {
-            visibleSlides = 2;
-        } else {
-            visibleSlides = 3;
-        }
-        // Adjust total slides if it's not perfectly divisible - important for dots calculation
-        // Or, recalculate how many 'pages' of slides there are.
-    }
-
-    function createDots() {
-        if (!testimonialDotsContainer) return;
-        testimonialDotsContainer.innerHTML = ''; // Clear existing dots
-        const numDots = Math.ceil(totalSlides / visibleSlides);
-        if (numDots <= 1) return; // No dots needed if only one page
-
-        for (let i = 0; i < numDots; i++) {
-            const dot = document.createElement('button');
-            dot.classList.add('dot');
-            dot.addEventListener('click', () => {
-                goToSlide(i * visibleSlides); // Go to the start of the page
-            });
-            testimonialDotsContainer.appendChild(dot);
-        }
-        updateDots();
-    }
-
-    function updateDots() {
-        if (!testimonialDotsContainer) return;
-        const dots = testimonialDotsContainer.querySelectorAll('.dot');
-        if (dots.length === 0) return;
-
-        dots.forEach(dot => dot.classList.remove('active'));
-        const currentPageIndex = Math.floor(currentSlide / visibleSlides);
-
-        if (currentPageIndex >= 0 && currentPageIndex < dots.length) {
-            dots[currentPageIndex].classList.add('active');
-        } else if (dots.length > 0 && currentSlide >= totalSlides - visibleSlides) {
-            // If somehow currentSlide is beyond the last full page but dots exist,
-            // highlight the last dot. This can happen if totalSlides isn't a multiple of visibleSlides.
-            dots[dots.length - 1].classList.add('active');
-        }
-    }
-
-    function goToSlide(slideIndex) {
-        // Clamp the index to prevent sliding beyond limits
-        // Ensure currentSlide is a multiple of visibleSlides for page alignment if navigating by dots/page logic
-        // However, the core logic should handle any valid start index of a view.
-        currentSlide = Math.max(0, Math.min(slideIndex, totalSlides - visibleSlides));
-
-        if (testimonialCards.length > 0 && testimonialCardsContainer) {
-            const cardWidth = testimonialCards[0].offsetWidth;
-            // Get the gap value reliably. Convert rem to pixels if necessary.
-            // Assuming 1rem = 16px (default), 2rem = 32px. A more robust way is needed for variable root font-size.
-            // Let's try reading computed style again, but check the value.
-            let gapValue = 0;
-            const computedGap = getComputedStyle(testimonialCardsContainer).gap;
-            if (computedGap && computedGap !== 'normal') {
-                // Simplistic pixel conversion assuming default font size
-                if (computedGap.includes('rem')) {
-                    // Assuming root font-size is 16px for rem conversion
-                    // This is fragile! A better approach might be needed.
-                    const baseFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
-                    gapValue = parseFloat(computedGap) * baseFontSize;
-                } else if (computedGap.includes('px')) {
-                    gapValue = parseFloat(computedGap);
+        function updateVisibleTestimonials() {
+            let visibleCount = 0;
+            testimonialCards.forEach((card, index) => {
+                if (card.style.display !== 'none') {
+                    visibleCount++;
                 }
-                // Add other unit handling if needed (em, %, etc.)
+            });
+
+            if (visibleCount <= initialShowCount) {
+                loadMoreButton.style.display = testimonialCards.length > initialShowCount ? '' : 'none';
+                showLessButton.style.display = 'none';
+            } else {
+                loadMoreButton.style.display = 'none';
+                showLessButton.style.display = '';
             }
-
-            // Fallback if reading gap fails
-            if (gapValue === 0 && totalSlides > 1) {
-                // Estimate gap based on container width vs card widths if possible
-                // Or hardcode a pixel value if rem calculation is too complex/unreliable
-                console.warn("Could not reliably calculate gap. Using estimated value.");
-                // Example hardcoded fallback for 2rem gap @ 16px font-size
-                gapValue = 32;
-            }
-
-            const totalCardMoveWidth = cardWidth + gapValue;
-            const moveAmount = -currentSlide * totalCardMoveWidth;
-
-            testimonialCardsContainer.style.transform = `translateX(${moveAmount}px)`;
-        }
-        updateDots();
-        resetAutoSlide();
-    }
-
-    function nextSlide() {
-        const numPages = Math.ceil(totalSlides / visibleSlides);
-        let currentPageNum = Math.floor(currentSlide / visibleSlides);
-        let nextPageNum = currentPageNum + 1;
-
-        if (nextPageNum >= numPages) { // If next page is beyond or at total pages
-            nextPageNum = 0; // Loop to first page
-        }
-        let nextSlideIndex = nextPageNum * visibleSlides;
-        // goToSlide will clamp nextSlideIndex if it's for a partial last page via its own logic.
-        goToSlide(nextSlideIndex);
-    }
-
-    function prevSlide() {
-        const numPages = Math.ceil(totalSlides / visibleSlides);
-        let currentPageNum = Math.floor(currentSlide / visibleSlides);
-        let prevPageNum = currentPageNum - 1;
-
-        if (prevPageNum < 0) { // If previous page is before the first page
-            prevPageNum = numPages - 1; // Loop to the last page
-        }
-        let prevSlideIndex = prevPageNum * visibleSlides;
-        // goToSlide will clamp prevSlideIndex if it's for a partial last page via its own logic.
-        goToSlide(prevSlideIndex);
-    }
-
-    function startAutoSlide() {
-        if (autoSlideInterval) clearInterval(autoSlideInterval);
-        autoSlideInterval = setInterval(nextSlide, 5000); // Slide every 5 seconds
-    }
-
-    function resetAutoSlide() {
-        startAutoSlide(); // Restart the timer
-    }
-
-    // Initial Setup
-    if (testimonialSlider && testimonialCards.length > 0) {
-        updateSliderConfig(); // Set initial visibleSlides count
-        createDots();         // Create initial dots
-        goToSlide(0);         // Position slider initially
-        startAutoSlide();     // Start auto-sliding
-
-        // Event Listeners
-        if (nextBtn) {
-            nextBtn.addEventListener('click', nextSlide);
-        }
-        if (prevBtn) {
-            prevBtn.addEventListener('click', prevSlide);
         }
 
-        window.addEventListener('resize', () => {
-            const oldVisibleSlides = visibleSlides;
-            updateSliderConfig();
-            if (oldVisibleSlides !== visibleSlides) {
-                createDots();
-                // Recalculate currentSlide to be a multiple of new visibleSlides, or closest valid
-                currentSlide = Math.floor(currentSlide / oldVisibleSlides) * visibleSlides;
-                currentSlide = Math.min(currentSlide, totalSlides - visibleSlides); // clamp
-                currentSlide = Math.max(0, currentSlide); // clamp
-                goToSlide(currentSlide);
+        // Initial setup: Hide cards beyond the initial count
+        testimonialCards.forEach((card, index) => {
+            if (index >= initialShowCount) {
+                card.style.display = 'none';
+            } else {
+                card.style.display = '';
             }
         });
+        updateVisibleTestimonials(); // Set initial button states
+
+        if (loadMoreButton) {
+            loadMoreButton.addEventListener('click', function () {
+                testimonialCards.forEach(card => {
+                    card.style.display = ''; // Show all cards
+                });
+                updateVisibleTestimonials();
+            });
+        }
+
+        if (showLessButton) {
+            showLessButton.addEventListener('click', function () {
+                testimonialCards.forEach((card, index) => {
+                    if (index >= initialShowCount) {
+                        card.style.display = 'none'; // Hide cards beyond initial count
+                    }
+                });
+                updateVisibleTestimonials();
+                // Scroll to the top of the testimonials section for better UX
+                const testimonialsSection = document.getElementById('testimonials');
+                if (testimonialsSection) {
+                    testimonialsSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        }
     }
+
+    /* Old Testimonial Slider - Commenting out as it's replaced by grid
+    const testimonialsSlider = document.querySelector('.testimonials-slider');
+    if (testimonialsSlider) {
+        const cardsContainer = testimonialsSlider.querySelector('.testimonial-cards');
+        const cards = Array.from(cardsContainer.children);
+        const dotsContainer = testimonialsSlider.parentElement.querySelector('.testimonial-dots');
+        const prevBtn = testimonialsSlider.querySelector('.prev-btn');
+        const nextBtn = testimonialsSlider.querySelector('.next-btn');
+
+        let currentIndex = 0;
+        let itemsPerPage = 3; // Default for desktop
+        let totalPages = 0;
+        let autoSlideInterval;
+
+        function updateSliderConfig() {
+            if (window.innerWidth <= 768) { // Mobile
+                itemsPerPage = 1;
+            } else if (window.innerWidth <= 992) { // Tablet
+                itemsPerPage = 2;
+            } else { // Desktop
+                itemsPerPage = 3;
+            }
+            totalPages = Math.ceil(cards.length / itemsPerPage);
+            // Recalculate width of the container for cards
+            // cardsContainer.style.width = `${cards.length * (100 / itemsPerPage)}%`;
+            cards.forEach(card => {
+                 // card.style.flexBasis = `${100 / itemsPerPage}%`; // Ensure cards take up correct space dynamically
+                 // card.style.flexBasis = card.style.flexBasis; // No, this line is wrong. Need to get the value from CSS or define it here
+            });
+            goToSlide(0); // Reset to first slide on resize
+        }
+
+
+        function createDots() {
+            if (!dotsContainer) return;
+            dotsContainer.innerHTML = '';
+            for (let i = 0; i < totalPages; i++) {
+                const dot = document.createElement('button');
+                dot.classList.add('dot');
+                if (i === currentIndex) {
+                    dot.classList.add('active');
+                }
+                dot.addEventListener('click', () => {
+                    goToSlide(i);
+                    resetAutoSlide();
+                });
+                dotsContainer.appendChild(dot);
+            }
+        }
+
+        function updateDots() {
+            if (!dotsContainer) return;
+            const dots = dotsContainer.querySelectorAll('.dot');
+            dots.forEach((dot, index) => {
+                if (index === currentIndex) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+
+
+        function goToSlide(slideIndex) {
+            if (slideIndex < 0) {
+                slideIndex = totalPages - 1;
+            } else if (slideIndex >= totalPages) {
+                slideIndex = 0;
+            }
+            currentIndex = slideIndex;
+            const cardWidth = cards[0].offsetWidth; // Assuming all cards have same width for calculation
+            const gap = parseInt(window.getComputedStyle(cardsContainer).gap) || 0; // Get gap value
+            
+            // Calculate offset based on items per page and card width including gap
+            // This needs to be reliable, considering cards are flex items.
+            // The transform should move by groups of `itemsPerPage`.
+            let offset = 0;
+            if (cards.length > 0) {
+                 // Calculate the width of a single card + its gap for the slide calculation.
+                 // The offset needs to be by `currentIndex * itemsPerPage * (card_width + gap)`
+                 // but the transform is on cardsContainer, which is a flex container.
+                 // Simpler approach for fixed itemsPerPage:
+                 // Offset for N items: N * (card_width + gap) - gap (to remove last gap)
+                 // For flexbox, it's easier to just scroll a certain number of items into view.
+                 // The current transform approach is good if cardsContainer width is set correctly.
+
+                 // Let's assume the cardsContainer shows 'itemsPerPage' cards at a time.
+                 // The transform needs to shift by the width of 'itemsPerPage' cards.
+
+                 // The previous implementation was:
+                 // cardsContainer.style.transform = `translateX(-${currentIndex * (100 / totalPages)}%)`; 
+                 // This assumes totalPages correctly represents viewable groups.
+
+                 // If itemsPerPage = 3, and 10 cards total.
+                 // totalPages = Math.ceil(10/3) = 4 pages. (0,1,2,3)
+                 // Page 0: items 0,1,2
+                 // Page 1: items 3,4,5
+                 // Page 2: items 6,7,8
+                 // Page 3: items 9
+                 // This needs careful calculation for the transform.
+                 // It is simpler to calculate offset based on individual item widths.
+
+                let totalWidthOfItemsToShift = 0;
+                for(let i = 0; i < currentIndex * itemsPerPage; i++) {
+                    if(cards[i]) { // Make sure card exists
+                         totalWidthOfItemsToShift += cards[i].offsetWidth + gap;
+                    }
+                }
+                 if (currentIndex * itemsPerPage > 0 && cards.length > 1) { // remove last gap if not first slide
+                    // totalWidthOfItemsToShift -= gap; // This might be needed if gap is applied after every item
+                 }
+                cardsContainer.style.transform = `translateX(-${totalWidthOfItemsToShift}px)`;
+            }
+
+            updateDots();
+        }
+
+
+        function nextSlide() {
+            goToSlide(currentIndex + 1);
+        }
+
+        function prevSlide() {
+            goToSlide(currentIndex - 1);
+        }
+
+        function startAutoSlide() {
+            // stopAutoSlide(); // Clear existing interval
+            // autoSlideInterval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
+        }
+
+        function resetAutoSlide() {
+            // clearInterval(autoSlideInterval);
+            // startAutoSlide();
+        }
+
+        if (nextBtn) nextBtn.addEventListener('click', () => { nextSlide(); resetAutoSlide(); });
+        if (prevBtn) prevBtn.addEventListener('click', () => { prevSlide(); resetAutoSlide(); });
+
+        // Initialize slider
+        updateSliderConfig(); // Set initial itemsPerPage and create dots
+        // createDots(); // createDots is now called within updateSliderConfig or after.
+        // goToSlide(0); // goToSlide is called within updateSliderConfig
+        // startAutoSlide(); // Start auto-sliding
+
+        // Recalculate on window resize
+        window.addEventListener('resize', () => {
+            updateSliderConfig();
+            // createDots(); // Ensure dots are recreated based on new totalPages
+            // goToSlide(currentIndex); // Adjust current slide to new layout
+        });
+    }
+    */
 });
+
