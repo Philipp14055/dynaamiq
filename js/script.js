@@ -703,7 +703,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     */
 
-    // Background Music Control - Überarbeitete Logik
+    // Background Music Control - Autoplay Attempt
     const backgroundMusic = document.getElementById('background-music');
     const playPauseButton = document.getElementById('play-pause-button');
 
@@ -711,7 +711,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const playPauseIcon = playPauseButton.querySelector('i');
         if (playPauseIcon) {
 
-            // Funktion zum Setzen des korrekten Button-Icons basierend auf dem Audio-Status
             function setButtonState() {
                 if (backgroundMusic.paused) {
                     playPauseIcon.classList.remove('fa-pause');
@@ -722,37 +721,48 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
 
-            // Initialen Zustand setzen, sobald Metadaten geladen sind (oder sofort, falls schon bereit)
-            if (backgroundMusic.readyState >= 1) { // HAVE_METADATA or more
-                backgroundMusic.pause();
-                setButtonState();
-            } else {
-                backgroundMusic.addEventListener('loadedmetadata', () => {
-                    backgroundMusic.pause();
+            // Attempt to autoplay when metadata is loaded
+            function attemptAutoplay() {
+                backgroundMusic.play().then(() => {
+                    // Autoplay started successfully
+                    console.log("Hintergrundmusik Autoplay erfolgreich.");
                     setButtonState();
-                }, { once: true }); // Nur einmal ausführen
+                }).catch(error => {
+                    // Autoplay was prevented or failed
+                    console.log("Hintergrundmusik Autoplay verhindert: ", error);
+                    // Ensure button shows Play icon if autoplay fails
+                    backgroundMusic.pause(); // Make sure it's really paused
+                    setButtonState();
+                });
             }
-            // Zusätzlicher defensiver Aufruf, falls Event nicht feuert oder zu spät
-            backgroundMusic.pause();
+
+            // Wait for metadata before attempting autoplay
+            if (backgroundMusic.readyState >= 1) { // HAVE_METADATA or more
+                attemptAutoplay();
+            } else {
+                backgroundMusic.addEventListener('loadedmetadata', attemptAutoplay, { once: true });
+            }
+            // Initial defensive state set (will be updated by autoplay attempt or events)
             setButtonState();
 
-            // Event-Listener für den Button-Klick
+
+            // Event-Listener for the Button-Klick
             playPauseButton.addEventListener('click', function () {
                 if (backgroundMusic.paused) {
                     backgroundMusic.play().catch(error => {
                         console.log("Play wurde verhindert oder Fehler: ", error);
-                        // Zustand wird durch 'pause' Event aktualisiert
+                        // State will be updated by 'pause' event if playback fails immediately
                     });
                 } else {
                     backgroundMusic.pause();
-                    // Zustand wird durch 'pause' Event aktualisiert
+                    // State will be updated by 'pause' event
                 }
             });
 
             // Event-Listener am Audio-Element, um Button synchron zu halten
             backgroundMusic.addEventListener('play', setButtonState);
             backgroundMusic.addEventListener('pause', setButtonState);
-            backgroundMusic.addEventListener('ended', setButtonState); // Setzt auf Play, wenn Loop endet
+            backgroundMusic.addEventListener('ended', setButtonState);
 
         } else {
             console.error("Play/Pause Icon nicht im Button gefunden.");
