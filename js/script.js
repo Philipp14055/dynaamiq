@@ -267,26 +267,45 @@ document.addEventListener('DOMContentLoaded', function () {
     function prefillContactFormFromPricing() {
         const inquiryDetails = sessionStorage.getItem('dynaamiqPackageInquiry');
         if (inquiryDetails) {
-            const contactFormMessageTextarea = document.getElementById('message'); // Renamed for clarity
+            const contactFormMessageTextarea = document.getElementById('message');
             const paketAuswahlDropdown = document.getElementById('paketAuswahl');
+            const hiddenPackageNameInput = document.getElementById('selectedPackageName');
+            const hiddenDurationInput = document.getElementById('selectedPackageDuration');
+            const hiddenDMsInput = document.getElementById('selectedPackageDMs');
+
+            // Parse details from the inquiryDetails string
+            const packageNameMatch = inquiryDetails.match(/Paket: (.*?)\n/);
+            const durationMatch = inquiryDetails.match(/Laufzeit: (.*?)\n/);
+            const dmsMatch = inquiryDetails.match(/DMs: (.*?)\n/);
+
+            const selectedPackageName = packageNameMatch && packageNameMatch[1] ? packageNameMatch[1].trim() : '';
+            const selectedDuration = durationMatch && durationMatch[1] ? durationMatch[1].trim() : '';
+            const selectedDMs = dmsMatch && dmsMatch[1] ? dmsMatch[1].trim() : '';
 
             if (contactFormMessageTextarea) {
-                // Prepend details and add a placeholder for user's message
                 contactFormMessageTextarea.value = `${inquiryDetails}\n\nIhre weitere Nachricht hier...`;
             }
 
-            if (paketAuswahlDropdown) {
-                const packageNameMatch = inquiryDetails.match(/Paket: (.*?)\n/);
-                if (packageNameMatch && packageNameMatch[1]) {
-                    const selectedPackageName = packageNameMatch[1].trim();
-                    for (let i = 0; i < paketAuswahlDropdown.options.length; i++) {
-                        if (paketAuswahlDropdown.options[i].value === selectedPackageName) {
-                            paketAuswahlDropdown.selectedIndex = i;
-                            break;
-                        }
+            if (paketAuswahlDropdown && selectedPackageName) {
+                for (let i = 0; i < paketAuswahlDropdown.options.length; i++) {
+                    if (paketAuswahlDropdown.options[i].value === selectedPackageName) {
+                        paketAuswahlDropdown.selectedIndex = i;
+                        break;
                     }
                 }
             }
+
+            // Populate hidden fields
+            if (hiddenPackageNameInput) {
+                hiddenPackageNameInput.value = selectedPackageName;
+            }
+            if (hiddenDurationInput) {
+                hiddenDurationInput.value = selectedDuration;
+            }
+            if (hiddenDMsInput) {
+                hiddenDMsInput.value = selectedDMs;
+            }
+
             sessionStorage.removeItem('dynaamiqPackageInquiry');
         }
     }
