@@ -254,13 +254,29 @@ document.addEventListener('DOMContentLoaded', function () {
     const requestButton = document.getElementById('requestButton');
     if (requestButton) {
         requestButton.addEventListener('click', function () {
+            // Gather all details from the pricing summary
             const packageName = document.getElementById('summaryPackage')?.textContent || 'N/A';
             const duration = document.getElementById('summaryDuration')?.textContent || 'N/A';
             const dms = document.getElementById('summaryDMs')?.textContent || 'N/A';
+            const toolCosts = document.getElementById('summaryToolCosts')?.textContent || 'N/A';
+            const setupCosts = document.getElementById('summarySetupCosts')?.textContent || 'N/A';
+            const monthlyPrice = document.getElementById('summaryMonthlyPrice')?.textContent || 'N/A';
+            const totalPrice = document.getElementById('summaryTotalPrice')?.textContent || 'N/A';
 
-            const inquiryDetails = `Anfrage bezüglich Paketkonfiguration:\nPaket: ${packageName}\nLaufzeit: ${duration}\nDMs: ${dms}\n---`;
+            const inquiryDetails =
+                `Anfrage bezüglich Paketkonfiguration:
+-------------------------------------
+Paket: ${packageName}
+Laufzeit: ${duration}
+Anzahl DMs: ${dms}
+Tool-Kosten: ${toolCosts}
+Einmalige Aufsetzungskosten: ${setupCosts}
+Monatlicher Preis: ${monthlyPrice}
+Gesamtpreis: ${totalPrice}
+-------------------------------------`;
+
             sessionStorage.setItem('dynaamiqPackageInquiry', inquiryDetails);
-            // The link's href attribute will handle navigation to #contact
+            // Allow default anchor behavior to navigate to #contact
         });
     }
 
@@ -268,48 +284,57 @@ document.addEventListener('DOMContentLoaded', function () {
         const inquiryDetails = sessionStorage.getItem('dynaamiqPackageInquiry');
         if (inquiryDetails) {
             const contactFormMessageTextarea = document.getElementById('message');
-            const paketAuswahlDropdown = document.getElementById('paketAuswahl');
+
+            // Get all hidden input fields
             const hiddenPackageNameInput = document.getElementById('selectedPackageName');
             const hiddenDurationInput = document.getElementById('selectedPackageDuration');
             const hiddenDMsInput = document.getElementById('selectedPackageDMs');
+            const hiddenToolCostsInput = document.getElementById('selectedToolCosts');
+            const hiddenSetupCostsInput = document.getElementById('selectedSetupCosts');
+            const hiddenMonthlyPriceInput = document.getElementById('selectedMonthlyPrice');
+            const hiddenTotalPriceInput = document.getElementById('selectedTotalPrice');
 
-            // Parse details from the inquiryDetails string
-            const packageNameMatch = inquiryDetails.match(/Paket: (.*?)\n/);
-            const durationMatch = inquiryDetails.match(/Laufzeit: (.*?)\n/);
-            const dmsMatch = inquiryDetails.match(/DMs: (.*?)\n/);
+            // Parse details from the inquiryDetails string (more robust parsing needed if format is critical)
+            const getValue = (regex) => {
+                const match = inquiryDetails.match(regex);
+                return match && match[1] ? match[1].trim() : '';
+            };
 
-            const selectedPackageName = packageNameMatch && packageNameMatch[1] ? packageNameMatch[1].trim() : '';
-            const selectedDuration = durationMatch && durationMatch[1] ? durationMatch[1].trim() : '';
-            const selectedDMs = dmsMatch && dmsMatch[1] ? dmsMatch[1].trim() : '';
+            const selectedPackageName = getValue(/Paket: (.*?)\n/);
+            const selectedDuration = getValue(/Laufzeit: (.*?)\n/);
+            const selectedDMs = getValue(/Anzahl DMs: (.*?)\n/);
+            const selectedToolCosts = getValue(/Tool-Kosten: (.*?)\n/);
+            const selectedSetupCosts = getValue(/Einmalige Aufsetzungskosten: (.*?)\n/);
+            const selectedMonthlyPrice = getValue(/Monatlicher Preis: (.*?)\n/);
+            const selectedTotalPrice = getValue(/Gesamtpreis: (.*?)\n/);
 
             if (contactFormMessageTextarea) {
                 contactFormMessageTextarea.value = `${inquiryDetails}\n\nIhre weitere Nachricht hier...`;
             }
 
-            if (paketAuswahlDropdown && selectedPackageName) {
-                for (let i = 0; i < paketAuswahlDropdown.options.length; i++) {
-                    if (paketAuswahlDropdown.options[i].value === selectedPackageName) {
-                        paketAuswahlDropdown.selectedIndex = i;
-                        break;
-                    }
-                }
-            }
-
             // Populate hidden fields
-            if (hiddenPackageNameInput) {
-                hiddenPackageNameInput.value = selectedPackageName;
-            }
-            if (hiddenDurationInput) {
-                hiddenDurationInput.value = selectedDuration;
-            }
-            if (hiddenDMsInput) {
-                hiddenDMsInput.value = selectedDMs;
-            }
+            if (hiddenPackageNameInput) hiddenPackageNameInput.value = selectedPackageName;
+            if (hiddenDurationInput) hiddenDurationInput.value = selectedDuration;
+            if (hiddenDMsInput) hiddenDMsInput.value = selectedDMs;
+            if (hiddenToolCostsInput) hiddenToolCostsInput.value = selectedToolCosts;
+            if (hiddenSetupCostsInput) hiddenSetupCostsInput.value = selectedSetupCosts;
+            if (hiddenMonthlyPriceInput) hiddenMonthlyPriceInput.value = selectedMonthlyPrice;
+            if (hiddenTotalPriceInput) hiddenTotalPriceInput.value = selectedTotalPrice;
 
-            sessionStorage.removeItem('dynaamiqPackageInquiry');
+            // Clear the item from sessionStorage after pre-filling to avoid re-filling on manual reload
+            // sessionStorage.removeItem('dynaamiqPackageInquiry'); // Keep for now to allow refresh, remove if causing issues
         }
     }
-    prefillContactFormFromPricing(); // Call on page load
+
+    // Call on page load in case the user reloads on #contact or arrives with a stored inquiry
+    prefillContactFormFromPricing();
+
+    // Call when the hash changes to #contact (e.g., after clicking 'Jetzt anfragen')
+    window.addEventListener('hashchange', function () {
+        if (window.location.hash === '#contact') {
+            prefillContactFormFromPricing();
+        }
+    });
 
     // Chart.js initialization
     // Assuming chart initialization logic is here or called from here

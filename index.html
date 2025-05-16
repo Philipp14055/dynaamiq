@@ -753,19 +753,14 @@
                         <label for="message" class="form-label">Nachricht</label>
                         <textarea id="message" name="message" class="form-control" required></textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="paketAuswahl" class="form-label">Paketauswahl</label>
-                        <select id="paketAuswahl" name="paket" class="form-control">
-                            <option value="" selected>Keine spezifische Paketauswahl</option>
-                            <option value="Premium Connect">Premium Connect</option>
-                            <option value="Audio Impact">Audio Impact</option>
-                            <option value="Ultimate Conversion">Ultimate Conversion</option>
-                        </select>
-                    </div>
                     <!-- Hidden fields for pricing details -->
                     <input type="hidden" id="selectedPackageName" name="selected_package_name" value="">
                     <input type="hidden" id="selectedPackageDuration" name="selected_package_duration" value="">
                     <input type="hidden" id="selectedPackageDMs" name="selected_package_dms" value="">
+                    <input type="hidden" id="selectedToolCosts" name="selected_tool_costs" value="">
+                    <input type="hidden" id="selectedSetupCosts" name="selected_setup_costs" value="">
+                    <input type="hidden" id="selectedMonthlyPrice" name="selected_monthly_price" value="">
+                    <input type="hidden" id="selectedTotalPrice" name="selected_total_price" value="">
 
                     <div class="form-group gdpr-consent">
                         <input type="checkbox" id="gdpr" name="gdpr" required>
