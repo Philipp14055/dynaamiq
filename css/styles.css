@@ -239,6 +239,13 @@ img {
   margin-left: 2rem;
 }
 
+.navbar-cta-icon {
+  display: none;
+  /* Hidden by default */
+  font-size: 1.2rem;
+  /* Adjust icon size as needed */
+}
+
 .navbar-toggle {
   display: none;
   background: none;
@@ -916,6 +923,7 @@ img {
   border-radius: var(--border-radius);
   overflow: hidden;
   margin-bottom: 1.5rem;
+  filter: grayscale(70%);
 }
 
 .member-image img {
@@ -925,7 +933,6 @@ img {
   object-position: center top;
   border-radius: 12px;
   transition: var(--transition);
-  filter: grayscale(70%);
 }
 
 .team-member:hover .member-image img {
@@ -1253,6 +1260,33 @@ textarea.form-control {
     display: block;
   }
 
+  .navbar-cta .navbar-cta-text {
+    display: none;
+    /* Hide text on smaller screens */
+  }
+
+  .navbar-cta .navbar-cta-icon {
+    display: inline-block;
+    /* Show icon */
+    margin-left: 0;
+    /* Remove margin if text is hidden */
+  }
+
+  .navbar-cta {
+    padding: 0.75rem;
+    /* Adjust padding for icon-only button */
+    width: auto;
+    /* Allow button to shrink to icon size */
+    min-width: 40px;
+    /* Ensure a minimum clickable area */
+    height: 40px;
+    /* Ensure a minimum clickable area */
+    display: flex;
+    /* For centering icon if needed */
+    align-items: center;
+    justify-content: center;
+  }
+
   .hero-container,
   .contact-container {
     grid-template-columns: 1fr;
@@ -1356,6 +1390,16 @@ textarea.form-control {
 
   .team-grid {
     grid-template-columns: repeat(1, 1fr);
+  }
+
+  .member-image img {
+    filter: grayscale(0%);
+  }
+
+  .feature-item {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
   }
 }
 
