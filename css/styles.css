@@ -1051,6 +1051,7 @@ img {
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: var(--border-radius);
   padding: 2rem;
+  align-self: start;
 }
 
 .form-group {
@@ -1082,6 +1083,29 @@ img {
 textarea.form-control {
   min-height: 120px;
   resize: vertical;
+}
+
+/* GDPR Checkbox Styling */
+.gdpr-consent {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-label-checkbox {
+  font-size: 0.9rem;
+  font-weight: normal;
+  margin-bottom: 0;
+}
+
+.form-label-checkbox a {
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+
+.form-label-checkbox a:hover {
+  text-decoration: none;
 }
 
 /* Footer */
@@ -1226,14 +1250,11 @@ textarea.form-control {
     left: 0;
     width: 100%;
     background-color: rgba(15, 21, 36, 0.95);
-    /* Darker background for dropdown */
     backdrop-filter: blur(10px);
     padding: 1rem 0;
     flex-direction: column;
     align-items: stretch;
-    /* Full width items */
     text-align: center;
-    /* Center text in links */
     display: none;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
   }
@@ -1244,9 +1265,7 @@ textarea.form-control {
 
   .navbar-menu a {
     margin: 0.75rem 0;
-    /* More spacing */
     padding: 0.5rem 1rem;
-    /* Padding for better click area */
   }
 
   .navbar-toggle {
@@ -1255,7 +1274,6 @@ textarea.form-control {
 
   .navbar-cta {
     display: none;
-    /* Hide the entire button on smaller screens */
   }
 
   .hero-container,
@@ -1272,25 +1290,20 @@ textarea.form-control {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  /* This is for the odd last item in a 2-column conversion grid */
   .conversion-grid>.conversion-card:last-child:nth-child(odd) {
     grid-column: 1 / -1;
-    /* Span full width */
   }
 
   .pricing-content {
     grid-template-columns: 1fr;
-    /* From Andere Siete */
   }
 
   .pricing-features {
     margin-bottom: 2rem;
-    /* From Andere Siete */
   }
 
   .slider-nav {
     display: none;
-    /* Hide slider nav on smaller screens */
   }
 
   .features-grid {
@@ -1410,7 +1423,6 @@ textarea.form-control {
   }
 }
 
-
 /* KI Extension Styles */
 .ki-extension-header {
   margin-top: 15px;
@@ -1470,9 +1482,7 @@ textarea.form-control {
 .testimonial-cards {
   display: flex;
   overflow: hidden;
-  /* Keep this to hide non-visible cards that are 'display: none' */
   gap: 2rem;
-  /* No width property needed here, children will define sizing */
 }
 
 .testimonial-card {
@@ -1483,7 +1493,6 @@ textarea.form-control {
   padding: 2rem;
   text-align: left;
   width: calc(33.333% - 1.33rem);
-  /* Default for 3 cards, 1.33rem is (2rem gap * 2) / 3 */
   flex-shrink: 0;
 }
 
@@ -1556,7 +1565,6 @@ textarea.form-control {
   cursor: pointer;
   transition: var(--transition);
   z-index: 10;
-  /* Ensure buttons are above cards */
 }
 
 .slider-nav:hover {
@@ -1565,15 +1573,11 @@ textarea.form-control {
 
 .prev-btn {
   left: -20px;
-  /* Adjusted for better visibility within container */
 }
 
 .next-btn {
   right: -20px;
-  /* Adjusted for better visibility within container */
 }
-
-/* Media Queries for Testimonials from test.css */
 
 @media (max-width: 1200px) {
   .prev-btn {
@@ -1588,29 +1592,22 @@ textarea.form-control {
 @media (max-width: 992px) {
   .testimonial-card {
     width: calc(50% - 1rem);
-    /* For 2 visible cards with 2rem gap */
     padding: 1.5rem;
-    /* Slightly reduced padding */
   }
 
   .slider-nav {
     display: none;
-    /* Hide prev/next arrows, rely on dots/swipe */
   }
 }
 
 @media (max-width: 768px) {
   .testimonial-card {
     width: 100%;
-    /* For 1 visible card, takes full width of the .testimonial-cards container */
     padding: 1.5rem;
-    /* Consistent with 992px or further reduce if needed */
-    /* If the .testimonial-cards container itself needs padding from screen edges, add it to .testimonials-slider or .testimonials-container */
   }
 
   .testimonial-content {
     font-size: 1rem;
-    /* Slightly smaller text on mobile */
   }
 
   .author-info p {
@@ -1624,10 +1621,4 @@ textarea.form-control {
     align-items: center;
     text-align: center;
   }
-
-  .slider-nav {
-    /* display: none; /* Potentially re-enable if JS handles all nav */
-  }
-
-  /* .testimonial-card width will be handled by JS based on visibleSlides */
 }
