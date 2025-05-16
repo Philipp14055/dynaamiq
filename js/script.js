@@ -49,15 +49,15 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Dashboard tabs
-    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabBtns = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
 
-    if (tabButtons.length > 0) {
-        tabButtons.forEach(btn => {
+    if (tabBtns.length > 0) {
+        tabBtns.forEach(btn => {
             btn.addEventListener('click', function () {
                 const tabId = this.getAttribute('data-tab');
 
-                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabBtns.forEach(btn => btn.classList.remove('active'));
                 tabContents.forEach(content => content.classList.remove('active'));
 
                 this.classList.add('active');
@@ -66,28 +66,152 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Pricing tabs (jetzt Package Cards Direktwahl)
-    const packageCards = document.querySelectorAll('.package-card'); // Geändert von pricingTabs zu packageCards
+    // Testimonial slider (New version from Andere Siete/test.js)
+    const testimonialCards = document.querySelectorAll('.testimonial-card');
+    const testimonialDotsContainer = document.querySelector('.testimonial-dots'); // Renamed for clarity
+    const prevBtn = document.querySelector('.testimonials-slider .prev-btn'); // Scoped to slider
+    const nextBtn = document.querySelector('.testimonials-slider .next-btn'); // Scoped to slider
+    let currentSlide = 0;
+    let visibleSlides = 3; // Default for desktop
+    let autoSlideInterval;
 
-    if (packageCards.length > 0) {
-        packageCards.forEach(card => { // Geändert von tab zu card
-            card.addEventListener('click', function () {
+    function updateVisibleSlidesAndCardWidths() {
+        if (window.innerWidth <= 768) { // Matches @media (max-width: 768px)
+            visibleSlides = 1;
+        } else if (window.innerWidth <= 992) { // Matches @media (max-width: 992px)
+            visibleSlides = 2;
+        } else {
+            visibleSlides = 3;
+        }
+
+        const totalCards = testimonialCards.length;
+        if (totalCards === 0) {
+            if (testimonialDotsContainer) testimonialDotsContainer.style.display = 'none';
+            return;
+        }
+
+        testimonialCards.forEach((card, index) => {
+            let isVisible = false;
+            for (let i = 0; i < visibleSlides; i++) {
+                if ((currentSlide + i) % totalCards === index) {
+                    isVisible = true;
+                    break;
+                }
+            }
+            card.style.display = isVisible ? 'flex' : 'none';
+        });
+
+        // Update dots
+        if (testimonialDotsContainer) {
+            testimonialDotsContainer.innerHTML = ''; // Clear existing dots
+            const numPages = Math.ceil(totalCards / visibleSlides);
+
+            if (numPages <= 1) { // Only one page or no scroll needed
+                testimonialDotsContainer.style.display = 'none';
+            } else {
+                testimonialDotsContainer.style.display = 'flex'; // Restore display
+                for (let i = 0; i < numPages; i++) {
+                    const dot = document.createElement('span');
+                    dot.classList.add('dot');
+                    // The active dot corresponds to the page of the currentSlide
+                    if (i === Math.floor(currentSlide / visibleSlides)) {
+                        dot.classList.add('active');
+                    }
+                    dot.addEventListener('click', () => {
+                        // When a dot is clicked, show the first slide of that "page"
+                        showSlide(i * visibleSlides);
+                    });
+                    testimonialDotsContainer.appendChild(dot);
+                }
+            }
+        }
+    }
+
+    function showSlide(slideIndex) {
+        const totalCards = testimonialCards.length;
+        if (totalCards === 0) return;
+
+        // Ensure slideIndex is within bounds and handles potential negative values from prevSlide
+        currentSlide = (slideIndex % totalCards + totalCards) % totalCards;
+
+        // If moving to a specific slide that isn't the start of a "page" for dot calculation,
+        // it's fine. The dot calculation Math.floor(currentSlide / visibleSlides) will handle it.
+
+        updateVisibleSlidesAndCardWidths(); // This will also update/re-render dots and set the active one
+        resetAutoSlide();
+    }
+
+    function nextSlide() {
+        const totalCards = testimonialCards.length;
+        if (totalCards <= visibleSlides && totalCards > 0) return; // No sliding if all cards are visible or fewer
+        showSlide(currentSlide + 1);
+    }
+
+    function prevSlide() {
+        const totalCards = testimonialCards.length;
+        if (totalCards <= visibleSlides && totalCards > 0) return;
+        showSlide(currentSlide - 1);
+    }
+
+    function startAutoSlide() {
+        if (autoSlideInterval) clearInterval(autoSlideInterval); // Clear existing interval first
+        if (testimonialCards.length > visibleSlides) { // Only auto-slide if there's something to slide to
+            autoSlideInterval = setInterval(nextSlide, 7000);
+        }
+    }
+
+    function resetAutoSlide() {
+        clearInterval(autoSlideInterval);
+        startAutoSlide();
+    }
+
+    if (testimonialCards.length > 0) {
+        updateVisibleSlidesAndCardWidths(); // Initial setup for slides and dots
+        window.addEventListener('resize', () => {
+            // Recalculate visible slides and redraw everything, then jump to current slide's page start
+            // This ensures consistency if currentSlide is, e.g. 1, and visibleSlides changes from 1 to 2.
+            const currentSlidePageStart = Math.floor(currentSlide / visibleSlides) * visibleSlides;
+            // updateVisibleSlidesAndCardWidths(); // This will be called by showSlide
+            showSlide(currentSlide); // Re-evaluate and redraw based on new visibleSlides
+        });
+        startAutoSlide(); // Start auto-slide after initial setup
+
+        // Event listeners for prev/next buttons are still valid as they call showSlide
+        if (prevBtn) {
+            prevBtn.addEventListener('click', prevSlide);
+        }
+        if (nextBtn) {
+            nextBtn.addEventListener('click', nextSlide);
+        }
+    }
+
+    // Pricing tabs (New version from Andere Siete/test.js)
+    const pricingTabs = document.querySelectorAll('.pricing-tab');
+    const packageFeatures = document.querySelectorAll('.package-features');
+
+    if (pricingTabs.length > 0) {
+        pricingTabs.forEach(tab => {
+            tab.addEventListener('click', function () {
                 const packageType = this.getAttribute('data-package');
-                const packageName = this.querySelector('h3').textContent;
 
-                packageCards.forEach(c => c.classList.remove('active'));
+                pricingTabs.forEach(tab => tab.classList.remove('active'));
+                packageFeatures.forEach(features => features.classList.remove('active'));
+
                 this.classList.add('active');
+                document.querySelector(`.${packageType}-features`).classList.add('active');
 
-                // Update summary immediately
-                document.getElementById('summaryPackage').textContent = packageName;
+                // Update summary
+                if (document.getElementById('summaryPackage')) {
+                    document.getElementById('summaryPackage').textContent = this.querySelector('h3').textContent;
+                }
 
-                // Update pricing based on new package selection
+                // Update pricing based on package
                 updatePricing();
             });
         });
     }
 
-    // Duration options
+    // Duration options (New version from Andere Siete/test.js)
     const durationOptions = document.querySelectorAll('.duration-option');
 
     if (durationOptions.length > 0) {
@@ -97,7 +221,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 this.classList.add('active');
 
                 const duration = this.getAttribute('data-duration');
-                document.getElementById('summaryDuration').textContent = `${duration} Monate`;
+                if (document.getElementById('summaryDuration')) {
+                    document.getElementById('summaryDuration').textContent = `${duration} Monate`;
+                }
 
                 // Update pricing based on duration
                 updatePricing();
@@ -105,142 +231,100 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // DM Slider
+    // DM Slider (New version from Andere Siete/test.js)
     const dmSlider = document.getElementById('dmSlider');
     const dmValue = document.getElementById('dmValue');
 
     if (dmSlider && dmValue) {
-        // Set initial position slightly offset from start
-        dmSlider.value = 2500;
+        dmSlider.value = 2500; // Initial value
         dmValue.textContent = formatNumber(dmSlider.value);
-        document.getElementById('summaryDMs').textContent = `${formatNumber(dmSlider.value)} DMs pro Monat`;
-
-        // Update slider background to show selected range
+        if (document.getElementById('summaryDMs')) {
+            document.getElementById('summaryDMs').textContent = `${formatNumber(dmSlider.value)} DMs pro Monat`;
+        }
         updateSliderBackground();
 
         dmSlider.addEventListener('input', function () {
             const value = this.value;
             dmValue.textContent = formatNumber(value);
-            document.getElementById('summaryDMs').textContent = `${formatNumber(value)} DMs pro Monat`;
-
-            // Update slider background
+            if (document.getElementById('summaryDMs')) {
+                document.getElementById('summaryDMs').textContent = `${formatNumber(value)} DMs pro Monat`;
+            }
             updateSliderBackground();
-
-            // Update pricing based on DM count
             updatePricing();
         });
-
-        // Function to update slider background and track
-        function updateSliderBackground() {
-            const min = parseInt(dmSlider.min);
-            const max = parseInt(dmSlider.max);
-            const val = parseInt(dmSlider.value);
-            const percentage = ((val - min) / (max - min)) * 100;
-
-            // Update the gradient background
-            dmSlider.style.background = `linear-gradient(to right, 
-                var(--primary-color) 0%, 
-                var(--secondary-color) ${percentage}%, 
-                rgba(255, 255, 255, 0.1) ${percentage}%, 
-                rgba(255, 255, 255, 0.1) 100%)`;
-
-            // Update the track element width
-            const dmSliderTrack = document.getElementById('dmSliderTrack');
-            if (dmSliderTrack) {
-                dmSliderTrack.style.width = `${percentage}%`;
-            }
-        }
     }
 
-    // Pricing calculator
+    function updateSliderBackground() {
+        if (!dmSlider) return;
+        const min = parseInt(dmSlider.min);
+        const max = parseInt(dmSlider.max);
+        const val = parseInt(dmSlider.value);
+        const percentage = ((val - min) / (max - min)) * 100;
+
+        dmSlider.style.background = `linear-gradient(to right, 
+            var(--primary-color) 0%, 
+            var(--secondary-color) ${percentage}%, 
+            rgba(255, 255, 255, 0.1) ${percentage}%, 
+            rgba(255, 255, 255, 0.1) 100%)`;
+    }
+
+    // Pricing calculator (New version from Andere Siete/test.js)
     function updatePricing() {
-        const activePackageCard = document.querySelector('.package-card.active');
-        if (!activePackageCard) {
-            console.error("Kein aktives Paket für Preisberechnung gefunden.");
-            return;
+        if (!document.querySelector('.pricing-tab.active') || !document.querySelector('.duration-option.active') || !dmSlider) {
+            return; // Exit if essential elements are not found
         }
-        const activePackageType = activePackageCard.getAttribute('data-package');
 
+        const activePackageTab = document.querySelector('.pricing-tab.active');
         const activeDurationOption = document.querySelector('.duration-option.active');
-        if (!activeDurationOption) {
-            console.error("Keine aktive Laufzeit für Preisberechnung gefunden.");
-            return;
-        }
-        const duration = parseInt(activeDurationOption.getAttribute('data-duration'));
-        // Rabatt direkt von der Vorlage ablesen (0, 10, 20)
-        let discountPercentage = 0;
-        if (duration === 6) discountPercentage = 10;
-        if (duration === 12) discountPercentage = 20;
 
-        const dmSlider = document.getElementById('dmSlider');
-        if (!dmSlider) {
-            console.error("DM Slider nicht gefunden.");
-            return;
-        }
+        const activePackage = activePackageTab.getAttribute('data-package');
+        const duration = parseInt(activeDurationOption.getAttribute('data-duration'));
+        const discount = parseInt(activeDurationOption.getAttribute('data-discount') || "0");
         const dmCount = parseInt(dmSlider.value);
 
-        let basePricePerDM, toolCosts, setupCosts;
+        let basePrice, toolCosts, setupCosts;
 
-        // Preise basierend auf der Vorlage für "Premium Connect"
-        // und Annahmen für die anderen Pakete, da diese nicht detailliert sind.
-        if (activePackageType === 'premium') { // Premium Connect
-            basePricePerDM = (1575 - 125) / 2250; // (Monatlicher Preis - Tool Kosten) / DMs
+        if (activePackage === 'basic') {
+            basePrice = 0.5;
             toolCosts = 125;
             setupCosts = 600;
-        } else if (activePackageType === 'audio') { // Audio Impact - Annahme
-            basePricePerDM = 0.70; // Annahme, basierend auf altem mittlerem Paket
-            toolCosts = 175;     // Annahme
-            setupCosts = 800;      // Annahme
-        } else if (activePackageType === 'ultimate') { // Ultimate Conversion - Annahme
-            basePricePerDM = 0.85; // Annahme, basierend auf altem höchsten Paket (leicht angepasst)
-            toolCosts = 225;     // Annahme
-            setupCosts = 1000;     // Annahme
+        } else if (activePackage === 'premium') {
+            basePrice = 0.7;
+            toolCosts = 175;
+            setupCosts = 800;
+        } else if (activePackage === 'enterprise') {
+            basePrice = 0.9;
+            toolCosts = 225;
+            setupCosts = 1000;
         } else {
-            console.error("Unbekannter Pakettyp: ", activePackageType);
-            return;
+            return; // Unknown package
         }
 
-        let monthlyDmCost = dmCount * basePricePerDM;
-        let currentMonthlyPrice = monthlyDmCost + toolCosts;
-
-        if (discountPercentage > 0) {
-            currentMonthlyPrice = currentMonthlyPrice * (1 - (discountPercentage / 100));
+        let monthlyPrice = (dmCount * basePrice) + toolCosts;
+        if (discount > 0) {
+            monthlyPrice = monthlyPrice * (1 - (discount / 100));
         }
+        const totalPrice = (monthlyPrice * duration) + setupCosts;
 
-        const totalSetupCosts = setupCosts; // Bleibt einmalig
-        const overallTotalPrice = (currentMonthlyPrice * duration) + totalSetupCosts;
-
-        document.getElementById('summaryPackage').textContent = activePackageCard.querySelector('h3').textContent;
-        document.getElementById('summaryDuration').textContent = `${duration} Monate`;
-        document.getElementById('summaryDMs').textContent = `${formatNumber(dmCount)} DMs pro Monat`;
-        document.getElementById('summaryToolCosts').textContent = `${toolCosts.toFixed(0)} € pro Monat`;
-        document.getElementById('summarySetupCosts').textContent = `${totalSetupCosts.toFixed(0)} € (einmalig)`;
-        document.getElementById('summaryMonthlyPrice').textContent = `${formatNumber(currentMonthlyPrice.toFixed(0))} € pro Monat`;
-        document.getElementById('summaryTotalPrice').textContent = `${formatNumber(overallTotalPrice.toFixed(0))} €`;
+        if (document.getElementById('summaryToolCosts')) {
+            document.getElementById('summaryToolCosts').textContent = `${toolCosts} € pro Monat`;
+        }
+        if (document.getElementById('summarySetupCosts')) {
+            document.getElementById('summarySetupCosts').textContent = `${setupCosts} € (einmalig)`;
+        }
+        if (document.getElementById('summaryMonthlyPrice')) {
+            document.getElementById('summaryMonthlyPrice').textContent = `${formatNumber(monthlyPrice.toFixed(0))} € pro Monat`;
+        }
+        if (document.getElementById('summaryTotalPrice')) {
+            document.getElementById('summaryTotalPrice').textContent = `${formatNumber(totalPrice.toFixed(0))} €`;
+        }
     }
 
-    // Initialize pricing on page load - Sicherstellen, dass dies nach allen Element-Definitionen geschieht
-    // und dass initiale Werte im HTML korrekt sind (z.B. erstes Paket 'active')
-    if (document.querySelector('.package-card.active') && document.querySelector('.duration-option.active') && document.getElementById('dmSlider')) {
+    if (document.querySelector('.pricing-tab')) {
         updatePricing();
-    } else {
-        // Fallback, falls initiale Auswahl nicht im HTML gesetzt ist oder Elemente fehlen
-        // Setze Standardauswahl und update Preise
-        const firstPackage = document.querySelector('.package-card');
-        if (firstPackage && !document.querySelector('.package-card.active')) {
-            firstPackage.classList.add('active');
-        }
-        const firstDuration = document.querySelector('.duration-option');
-        if (firstDuration && !document.querySelector('.duration-option.active')) {
-            firstDuration.classList.add('active');
-        }
-        // Trigger updatePricing, wenn alle Elemente vorhanden sind
-        if (document.querySelector('.package-card.active') && document.querySelector('.duration-option.active') && document.getElementById('dmSlider')) {
-            updatePricing();
-        }
     }
 
-    // Format numbers with thousand separator
+    // Format numbers with thousand separator (from Andere Siete/test.js)
     function formatNumber(num) {
         return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
@@ -487,290 +571,4 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     }
-
-    // Testimonial "Load More" functionality
-    const testimonialGrid = document.querySelector('.testimonial-grid');
-    if (testimonialGrid) {
-        const testimonialCards = Array.from(testimonialGrid.querySelectorAll('.testimonial-card')); // Convert to Array
-        const loadMoreButton = document.getElementById('loadMoreTestimonials');
-        const showLessButton = document.getElementById('showLessTestimonials'); // Get the new button
-        const initialShowCount = 3;
-
-        function updateVisibleTestimonials() {
-            let visibleCount = 0;
-            testimonialCards.forEach((card, index) => {
-                if (card.style.display !== 'none') {
-                    visibleCount++;
-                }
-            });
-
-            if (visibleCount <= initialShowCount) {
-                loadMoreButton.style.display = testimonialCards.length > initialShowCount ? '' : 'none';
-                showLessButton.style.display = 'none';
-            } else {
-                loadMoreButton.style.display = 'none';
-                showLessButton.style.display = '';
-            }
-        }
-
-        // Initial setup: Hide cards beyond the initial count
-        testimonialCards.forEach((card, index) => {
-            if (index >= initialShowCount) {
-                card.style.display = 'none';
-            } else {
-                card.style.display = '';
-            }
-        });
-        updateVisibleTestimonials(); // Set initial button states
-
-        if (loadMoreButton) {
-            loadMoreButton.addEventListener('click', function () {
-                testimonialCards.forEach(card => {
-                    card.style.display = ''; // Show all cards
-                });
-                updateVisibleTestimonials();
-            });
-        }
-
-        if (showLessButton) {
-            showLessButton.addEventListener('click', function () {
-                testimonialCards.forEach((card, index) => {
-                    if (index >= initialShowCount) {
-                        card.style.display = 'none'; // Hide cards beyond initial count
-                    }
-                });
-                updateVisibleTestimonials();
-                // Scroll to the top of the testimonials section for better UX
-                const testimonialsSection = document.getElementById('testimonials');
-                if (testimonialsSection) {
-                    testimonialsSection.scrollIntoView({ behavior: 'smooth' });
-                }
-            });
-        }
-    }
-
-    /* Old Testimonial Slider - Commenting out as it's replaced by grid
-    const testimonialsSlider = document.querySelector('.testimonials-slider');
-    if (testimonialsSlider) {
-        const cardsContainer = testimonialsSlider.querySelector('.testimonial-cards');
-        const cards = Array.from(cardsContainer.children);
-        const dotsContainer = testimonialsSlider.parentElement.querySelector('.testimonial-dots');
-        const prevBtn = testimonialsSlider.querySelector('.prev-btn');
-        const nextBtn = testimonialsSlider.querySelector('.next-btn');
-
-        let currentIndex = 0;
-        let itemsPerPage = 3; // Default for desktop
-        let totalPages = 0;
-        let autoSlideInterval;
-
-        function updateSliderConfig() {
-            if (window.innerWidth <= 768) { // Mobile
-                itemsPerPage = 1;
-            } else if (window.innerWidth <= 992) { // Tablet
-                itemsPerPage = 2;
-            } else { // Desktop
-                itemsPerPage = 3;
-            }
-            totalPages = Math.ceil(cards.length / itemsPerPage);
-            // Recalculate width of the container for cards
-            // cardsContainer.style.width = `${cards.length * (100 / itemsPerPage)}%`;
-            cards.forEach(card => {
-                 // card.style.flexBasis = `${100 / itemsPerPage}%`; // Ensure cards take up correct space dynamically
-                 // card.style.flexBasis = card.style.flexBasis; // No, this line is wrong. Need to get the value from CSS or define it here
-            });
-            goToSlide(0); // Reset to first slide on resize
-        }
-
-
-        function createDots() {
-            if (!dotsContainer) return;
-            dotsContainer.innerHTML = '';
-            for (let i = 0; i < totalPages; i++) {
-                const dot = document.createElement('button');
-                dot.classList.add('dot');
-                if (i === currentIndex) {
-                    dot.classList.add('active');
-                }
-                dot.addEventListener('click', () => {
-                    goToSlide(i);
-                    resetAutoSlide();
-                });
-                dotsContainer.appendChild(dot);
-            }
-        }
-
-        function updateDots() {
-            if (!dotsContainer) return;
-            const dots = dotsContainer.querySelectorAll('.dot');
-            dots.forEach((dot, index) => {
-                if (index === currentIndex) {
-                    dot.classList.add('active');
-                } else {
-                    dot.classList.remove('active');
-                }
-            });
-        }
-
-
-        function goToSlide(slideIndex) {
-            if (slideIndex < 0) {
-                slideIndex = totalPages - 1;
-            } else if (slideIndex >= totalPages) {
-                slideIndex = 0;
-            }
-            currentIndex = slideIndex;
-            const cardWidth = cards[0].offsetWidth; // Assuming all cards have same width for calculation
-            const gap = parseInt(window.getComputedStyle(cardsContainer).gap) || 0; // Get gap value
-            
-            // Calculate offset based on items per page and card width including gap
-            // This needs to be reliable, considering cards are flex items.
-            // The transform should move by groups of `itemsPerPage`.
-            let offset = 0;
-            if (cards.length > 0) {
-                 // Calculate the width of a single card + its gap for the slide calculation.
-                 // The offset needs to be by `currentIndex * itemsPerPage * (card_width + gap)`
-                 // but the transform is on cardsContainer, which is a flex container.
-                 // Simpler approach for fixed itemsPerPage:
-                 // Offset for N items: N * (card_width + gap) - gap (to remove last gap)
-                 // For flexbox, it's easier to just scroll a certain number of items into view.
-                 // The current transform approach is good if cardsContainer width is set correctly.
-
-                 // Let's assume the cardsContainer shows 'itemsPerPage' cards at a time.
-                 // The transform needs to shift by the width of 'itemsPerPage' cards.
-
-                 // The previous implementation was:
-                 // cardsContainer.style.transform = `translateX(-${currentIndex * (100 / totalPages)}%)`; 
-                 // This assumes totalPages correctly represents viewable groups.
-
-                 // If itemsPerPage = 3, and 10 cards total.
-                 // totalPages = Math.ceil(10/3) = 4 pages. (0,1,2,3)
-                 // Page 0: items 0,1,2
-                 // Page 1: items 3,4,5
-                 // Page 2: items 6,7,8
-                 // Page 3: items 9
-                 // This needs careful calculation for the transform.
-                 // It is simpler to calculate offset based on individual item widths.
-
-                let totalWidthOfItemsToShift = 0;
-                for(let i = 0; i < currentIndex * itemsPerPage; i++) {
-                    if(cards[i]) { // Make sure card exists
-                         totalWidthOfItemsToShift += cards[i].offsetWidth + gap;
-                    }
-                }
-                 if (currentIndex * itemsPerPage > 0 && cards.length > 1) { // remove last gap if not first slide
-                    // totalWidthOfItemsToShift -= gap; // This might be needed if gap is applied after every item
-                 }
-                cardsContainer.style.transform = `translateX(-${totalWidthOfItemsToShift}px)`;
-            }
-
-            updateDots();
-        }
-
-
-        function nextSlide() {
-            goToSlide(currentIndex + 1);
-        }
-
-        function prevSlide() {
-            goToSlide(currentIndex - 1);
-        }
-
-        function startAutoSlide() {
-            // stopAutoSlide(); // Clear existing interval
-            // autoSlideInterval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
-        }
-
-        function resetAutoSlide() {
-            // clearInterval(autoSlideInterval);
-            // startAutoSlide();
-        }
-
-        if (nextBtn) nextBtn.addEventListener('click', () => { nextSlide(); resetAutoSlide(); });
-        if (prevBtn) prevBtn.addEventListener('click', () => { prevSlide(); resetAutoSlide(); });
-
-        // Initialize slider
-        updateSliderConfig(); // Set initial itemsPerPage and create dots
-        // createDots(); // createDots is now called within updateSliderConfig or after.
-        // goToSlide(0); // goToSlide is called within updateSliderConfig
-        // startAutoSlide(); // Start auto-sliding
-
-        // Recalculate on window resize
-        window.addEventListener('resize', () => {
-            updateSliderConfig();
-            // createDots(); // Ensure dots are recreated based on new totalPages
-            // goToSlide(currentIndex); // Adjust current slide to new layout
-        });
-    }
-    */
-
-    // Background Music Control - Autoplay Attempt
-    const backgroundMusic = document.getElementById('background-music');
-    const playPauseButton = document.getElementById('play-pause-button');
-
-    if (playPauseButton && backgroundMusic) {
-        const playPauseIcon = playPauseButton.querySelector('i');
-        if (playPauseIcon) {
-
-            function setButtonState() {
-                if (backgroundMusic.paused) {
-                    playPauseIcon.classList.remove('fa-pause');
-                    playPauseIcon.classList.add('fa-play');
-                } else {
-                    playPauseIcon.classList.remove('fa-play');
-                    playPauseIcon.classList.add('fa-pause');
-                }
-            }
-
-            // Attempt to autoplay when metadata is loaded
-            function attemptAutoplay() {
-                backgroundMusic.play().then(() => {
-                    // Autoplay started successfully
-                    console.log("Hintergrundmusik Autoplay erfolgreich.");
-                    setButtonState();
-                }).catch(error => {
-                    // Autoplay was prevented or failed
-                    console.log("Hintergrundmusik Autoplay verhindert: ", error);
-                    // Ensure button shows Play icon if autoplay fails
-                    backgroundMusic.pause(); // Make sure it's really paused
-                    setButtonState();
-                });
-            }
-
-            // Wait for metadata before attempting autoplay
-            if (backgroundMusic.readyState >= 1) { // HAVE_METADATA or more
-                attemptAutoplay();
-            } else {
-                backgroundMusic.addEventListener('loadedmetadata', attemptAutoplay, { once: true });
-            }
-            // Initial defensive state set (will be updated by autoplay attempt or events)
-            setButtonState();
-
-
-            // Event-Listener for the Button-Klick
-            playPauseButton.addEventListener('click', function () {
-                if (backgroundMusic.paused) {
-                    backgroundMusic.play().catch(error => {
-                        console.log("Play wurde verhindert oder Fehler: ", error);
-                        // State will be updated by 'pause' event if playback fails immediately
-                    });
-                } else {
-                    backgroundMusic.pause();
-                    // State will be updated by 'pause' event
-                }
-            });
-
-            // Event-Listener am Audio-Element, um Button synchron zu halten
-            backgroundMusic.addEventListener('play', setButtonState);
-            backgroundMusic.addEventListener('pause', setButtonState);
-            backgroundMusic.addEventListener('ended', setButtonState);
-
-        } else {
-            console.error("Play/Pause Icon nicht im Button gefunden.");
-        }
-    } else {
-        if (!backgroundMusic) console.error("Audio Element #background-music nicht gefunden.");
-        if (!playPauseButton) console.error("Button #play-pause-button nicht gefunden.");
-    }
-
 });
-

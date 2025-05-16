@@ -97,12 +97,14 @@
     <!-- Solution Section -->
     <section id="solution" class="solution section">
         <div class="container">
-            <div class="section-subtitle">UNSERE LÖSUNG</div>
-            <h2>Wie Dynaamiq AI den Unterschied macht</h2>
+            <div class="section-header-container">
+                <div class="section-subtitle">UNSERE LÖSUNG</div>
+                <h2>Wie Dynaamiq AI den Unterschied macht</h2>
+            </div>
             <div class="solution-steps">
                 <div class="solution-step card" data-aos="fade-up" data-aos-delay="100">
                     <div class="step-number">1</div>
-                    <h3>Zielgruppenanalyse</h3>
+                    <h3>Zielgruppen&shy;analyse</h3>
                     <p>Wir identifizieren Ihre idealen Kunden und filtern sie heraus nach ihren Wunschkriterien für
                         maximale Relevanz.</p>
                 </div>
@@ -148,8 +150,10 @@
     <!-- Conversion Steps Section -->
     <section id="conversion-steps" class="conversion-steps section">
         <div class="container">
-            <div class="section-subtitle">CONVERSION-STUFEN</div>
-            <h2>Personalisierter Text – Audio – Video</h2>
+            <div class="section-header-container">
+                <div class="section-subtitle">CONVERSION-STUFEN</div>
+                <h2>Personalisierter Text – Audio – Video</h2>
+            </div>
             <div class="conversion-grid">
                 <div class="conversion-card card" data-aos="fade-up" data-aos-delay="100">
                     <div class="conversion-icon">
@@ -209,53 +213,118 @@
         </div>
     </section>
 
+    <!-- Features Section -->
+    <section id="features" class="features section">
+        <div class="container">
+            <div class="section-header-container">
+                <div class="section-subtitle">FUNKTIONEN</div>
+                <h2>Was Dynaamiq AI besonders macht</h2>
+            </div>
+            <div class="features-grid">
+                <div class="feature-item" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Fortschrittliche KI</h3>
+                        <p>Unsere lernfähige KI wird mit jeder versendeten Nachricht präziser und effektiver.</p>
+                    </div>
+                </div>
+                <div class="feature-item" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Automatisierung & menschliche Kontrolle</h3>
+                        <p>Technologie trifft Erfahrung – für maximale Wirkung bei voller Kontrolle.</p>
+                    </div>
+                </div>
+                <div class="feature-item" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Wöchentliche Reports & Betreuung</h3>
+                        <p>Sie erhalten regelmäßig Updates mit Performance-Daten und klaren Empfehlungen.</p>
+                    </div>
+                </div>
+                <div class="feature-item" data-aos="fade-up" data-aos-delay="400">
+                    <div class="feature-icon">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Eigene Plattform</h3>
+                        <p>Unser KI-System wurde speziell für Instagram-Kaltakquise entwickelt und optimiert.</p>
+                    </div>
+                </div>
+                <div class="feature-item" data-aos="fade-up" data-aos-delay="500">
+                    <div class="feature-icon">
+                        <i class="fas fa-comment-dots"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Personalisierte Nachrichten</h3>
+                        <p>Basierend auf echten Profilanalysen erstellen wir emotional ansprechende, authentische
+                            Inhalte.</p>
+                    </div>
+                </div>
+                <div class="feature-item" data-aos="fade-up" data-aos-delay="600">
+                    <div class="feature-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Performance-Dashboard</h3>
+                        <p>Verfolgen Sie Ihre Kampagne live in Ihrem persönlichen Dashboard – mit KPIs, Verlauf und
+                            Echtzeitdaten und seien Sie uptodate mit Wochenberichten wie die Kampagnen laufen.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Dashboard Section -->
     <section id="dashboard" class="dashboard section">
-        <div class="container">
+        <div class="container dashboard-container">
             <div class="section-subtitle">ECHTZEIT-EINBLICKE</div>
             <h2>Ihr persönliches Performance-Dashboard</h2>
             <p>Behalten Sie den Überblick über alle wichtigen Kennzahlen Ihrer Instagram-Akquise</p>
 
-            <div class="dashboard-layout">
-                <div class="dashboard-tabs">
-                    <button class="tab-button active" data-tab="messages">Gesendete Nachrichten</button>
-                    <button class="tab-button" data-tab="response">Antwortrate</button>
-                    <button class="tab-button" data-tab="performance">Message Performance</button>
-                    <button class="tab-button" data-tab="conversion">Conversion Funnel</button>
+            <div class="dashboard-tabs">
+                <button class="tab-btn active" data-tab="messages">Gesendete Nachrichten</button>
+                <button class="tab-btn" data-tab="response">Antwortrate</button>
+                <button class="tab-btn" data-tab="performance">Message Performance</button>
+                <button class="tab-btn" data-tab="conversion">Conversion Funnel</button>
+            </div>
+
+            <div class="dashboard-content">
+                <div id="messages" class="tab-content active">
+                    <div class="chart-container">
+                        <canvas id="messagesChart"></canvas>
+                    </div>
+                    <p>Verfolgen Sie die Anzahl der gesendeten Nachrichten im Zeitverlauf und optimieren Sie Ihre
+                        Versandstrategie.</p>
                 </div>
 
-                <div class="dashboard-content">
-                    <div id="messages" class="tab-content active">
-                        <div class="chart-container">
-                            <canvas id="messagesChart"></canvas>
-                        </div>
-                        <p>Verfolgen Sie die Anzahl der gesendeten Nachrichten im Zeitverlauf und optimieren Sie Ihre
-                            Versandstrategie.</p>
+                <div id="response" class="tab-content">
+                    <div class="chart-container">
+                        <canvas id="responseRateChart"></canvas>
                     </div>
+                    <p>Analysieren Sie Ihre Antwortquoten und identifizieren Sie die effektivsten Nachrichtentypen.</p>
+                </div>
 
-                    <div id="response" class="tab-content">
-                        <div class="chart-container">
-                            <canvas id="responseRateChart"></canvas>
-                        </div>
-                        <p>Analysieren Sie Ihre Antwortquoten und identifizieren Sie die effektivsten Nachrichtentypen.
-                        </p>
+                <div id="performance" class="tab-content">
+                    <div class="chart-container">
+                        <canvas id="messagePerformanceChart"></canvas>
                     </div>
+                    <p>Vergleichen Sie die Performance verschiedener Nachrichtenformate (Text, Audio, Video) für
+                        maximale Wirkung.</p>
+                </div>
 
-                    <div id="performance" class="tab-content">
-                        <div class="chart-container">
-                            <canvas id="performanceChart"></canvas>
-                        </div>
-                        <p>Vergleichen Sie die Performance verschiedener Nachrichtentypen und optimieren Sie Ihre
-                            Strategie.</p>
+                <div id="conversion" class="tab-content">
+                    <div class="chart-container">
+                        <canvas id="conversionFunnelChart"></canvas>
                     </div>
-
-                    <div id="conversion" class="tab-content">
-                        <div class="chart-container">
-                            <canvas id="conversionFunnelChart"></canvas>
-                        </div>
-                        <p>Visualisieren Sie Ihren kompletten Conversion-Funnel von der ersten Nachricht bis zum
-                            Abschluss.</p>
-                    </div>
+                    <p>Visualisieren Sie Ihren kompletten Conversion-Funnel von der ersten Nachricht bis zum Abschluss.
+                    </p>
                 </div>
             </div>
         </div>
@@ -263,356 +332,277 @@
 
     <!-- Testimonials Section -->
     <section id="testimonials" class="testimonials section">
-        <div class="container">
-            <div class="section-subtitle">KUNDENSTIMMEN</div>
-            <h2>Was unsere Kunden über uns sagen</h2>
+        <div class="container testimonials-container">
+            <div class="section-header-container">
+                <div class="section-subtitle">KUNDENSTIMMEN</div>
+                <h2>Was unsere Kunden über uns sagen</h2>
+            </div>
             <p>Erfahren Sie, wie Dynaamiq AI Unternehmen verschiedener Branchen zu mehr Kunden verhilft</p>
 
-            <div class="testimonial-grid">
-                <div class="testimonial-card card" data-aos="fade-up">
-                    <p class="testimonial-quote">"Seit wir mit Dynaamiq AI arbeiten, haben sich unsere Leads
-                        verdreifacht. Die personalisierten Nachrichten kommen bei unseren Zielkunden hervorragend an
-                        und die Conversion-Rate ist beeindruckend."</p>
-                    <div class="testimonial-author">
-                        <div class="author-image">
-                            <img src="images/image.png" alt="Kunde Michael">
+            <div class="testimonials-slider">
+                <div class="testimonial-cards">
+                    <div class="testimonial-card">
+                        <div class="testimonial-content">
+                            "Seit wir mit Dynaamiq AI arbeiten, haben sich unsere Leads verdreifacht. Die
+                            personalisierten Nachrichten kommen bei unseren Zielkunden hervorragend an und die
+                            Conversion-Rate ist beeindruckend."
                         </div>
-                        <div class="author-info">
-                            <span class="author-tag">Kunde</span>
-                            <h4 class="author-name">Michael</h4>
-                            <p class="author-role">SaaS-Unternehmer</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">
+                                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Kunde">
+                            </div>
+                            <div class="author-info">
+                                <h4>Michael</h4>
+                                <p>SaaS-Unternehmer</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-content">
+                            "Die Audio-Nachrichten haben unsere Antwortrate um 40% gesteigert. Das Team von Dynaamiq AI
+                            hat uns hervorragend beraten und die Implementierung war unkompliziert."
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">
+                                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Kundin">
+                            </div>
+                            <div class="author-info">
+                                <h4>Sarah</h4>
+                                <p>E-Commerce Shop Betreiberin</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-content">
+                            "Wir haben verschiedene Anbieter für Instagram-Akquise getestet, aber keiner kam an die
+                            Ergebnisse von Dynaamiq AI heran. Die KI-generierten Videos sind ein Game-Changer."
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">
+                                <img src="https://randomuser.me/api/portraits/men/67.jpg" alt="Kunde">
+                            </div>
+                            <div class="author-info">
+                                <h4>Thomas</h4>
+                                <p>Marketing Agentur</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-content">
+                            "Die Kombination aus KI-Technologie und menschlicher Expertise macht Dynaamiq AI
+                            einzigartig. Wir konnten unsere Kundenakquise komplett automatisieren und gleichzeitig die
+                            Qualität steigern."
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">
+                                <img src="https://randomuser.me/api/portraits/women/28.jpg" alt="Kundin">
+                            </div>
+                            <div class="author-info">
+                                <h4>Laura</h4>
+                                <p>Beratungsunternehmen</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-content">
+                            "Die wöchentlichen Reports geben uns volle Transparenz über die Performance unserer
+                            Kampagnen. Die kontinuierliche Optimierung durch das Team führt zu immer besseren
+                            Ergebnissen."
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">
+                                <img src="https://randomuser.me/api/portraits/men/52.jpg" alt="Kunde">
+                            </div>
+                            <div class="author-info">
+                                <h4>Daniel</h4>
+                                <p>Finanzdienstleister</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-content">
+                            "Wir waren skeptisch, ob KI wirklich authentische Nachrichten erstellen kann. Aber die
+                            Ergebnisse sprechen für sich – unsere Antwortrate ist um 35% gestiegen und die Qualität der
+                            Leads ist deutlich besser."
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">
+                                <img src="https://randomuser.me/api/portraits/women/15.jpg" alt="Kundin">
+                            </div>
+                            <div class="author-info">
+                                <h4>Julia</h4>
+                                <p>Immobilienmaklerin</p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="testimonial-card card" data-aos="fade-up">
-                    <p class="testimonial-quote">"Die Audio-Nachrichten haben unsere Antwortrate um 40% gesteigert.
-                        Das Team von Dynaamiq AI hat uns hervorragend beraten und die Implementierung war
-                        unkompliziert."</p>
-                    <div class="testimonial-author">
-                        <div class="author-image">
-                            <img src="images/image.png" alt="Kundin Sarah">
-                        </div>
-                        <div class="author-info">
-                            <span class="author-tag">Kundin</span>
-                            <h4 class="author-name">Sarah</h4>
-                            <p class="author-role">E-Commerce Shop Betreiberin</p>
-                        </div>
-                    </div>
+                <div class="slider-nav prev-btn">
+                    <i class="fas fa-chevron-left"></i>
                 </div>
-
-                <div class="testimonial-card card" data-aos="fade-up">
-                    <p class="testimonial-quote">"Wir haben verschiedene Anbieter für Instagram-Akquise getestet,
-                        aber keiner kam an die Ergebnisse von Dynaamiq AI heran. Die KI-generierten Videos sind ein
-                        Game-Changer."</p>
-                    <div class="testimonial-author">
-                        <div class="author-image">
-                            <img src="images/image.png" alt="Kunde Thomas">
-                        </div>
-                        <div class="author-info">
-                            <span class="author-tag">Kunde</span>
-                            <h4 class="author-name">Thomas</h4>
-                            <p class="author-role">Marketing Agentur</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="testimonial-card card" data-aos="fade-up" style="display: none;">
-                    <p class="testimonial-quote">"Die Kombination aus KI-Technologie und menschlicher Expertise
-                        macht Dynaamiq AI einzigartig. Wir konnten unsere Kundenakquise komplett automatisieren und
-                        gleichzeitig die Qualität steigern."</p>
-                    <div class="testimonial-author">
-                        <div class="author-image">
-                            <img src="images/image.png" alt="Kundin Laura">
-                        </div>
-                        <div class="author-info">
-                            <span class="author-tag">Kundin</span>
-                            <h4 class="author-name">Laura</h4>
-                            <p class="author-role">Beratungsunternehmen</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="testimonial-card card" data-aos="fade-up" style="display: none;">
-                    <p class="testimonial-quote">"Die wöchentlichen Reports geben uns volle Transparenz über die
-                        Performance unserer Kampagnen. Die kontinuierliche Optimierung durch das Team führt zu immer
-                        besseren Ergebnissen."</p>
-                    <div class="testimonial-author">
-                        <div class="author-image">
-                            <img src="images/image.png" alt="Kunde Daniel">
-                        </div>
-                        <div class="author-info">
-                            <span class="author-tag">Kunde</span>
-                            <h4 class="author-name">Daniel</h4>
-                            <p class="author-role">Finanzdienstleister</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="testimonial-card card" data-aos="fade-up" style="display: none;">
-                    <p class="testimonial-quote">"Wir waren skeptisch, ob KI wirklich authentische Nachrichten
-                        erstellen kann. Aber die Ergebnisse sprechen für sich – unsere Antwortrate ist um 35%
-                        gestiegen und die Qualität der Leads ist deutlich besser."</p>
-                    <div class="testimonial-author">
-                        <div class="author-image">
-                            <img src="images/image.png" alt="Kundin Julia">
-                        </div>
-                        <div class="author-info">
-                            <span class="author-tag">Kundin</span>
-                            <h4 class="author-name">Julia</h4>
-                            <p class="author-role">Immobilienmaklerin</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="testimonial-card card" data-aos="fade-up" style="display: none;">
-                    <p class="testimonial-quote">"Dank Dynaamiq AI konnten wir unsere Reichweite auf Instagram
-                        signifikant erhöhen und wertvolle Kontakte knüpfen. Sehr empfehlenswert!"</p>
-                    <div class="testimonial-author">
-                        <div class="author-image">
-                            <img src="images/image.png" alt="Kunde Max">
-                        </div>
-                        <div class="author-info">
-                            <span class="author-tag">Kunde</span>
-                            <h4 class="author-name">Max</h4>
-                            <p class="author-role">Startup Gründer</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="testimonial-card card" data-aos="fade-up" style="display: none;">
-                    <p class="testimonial-quote">"Die Zusammenarbeit war von Anfang an professionell und
-                        zielorientiert. Die KI-gestützten Analysen haben uns geholfen, unsere Zielgruppe noch besser
-                        zu verstehen."</p>
-                    <div class="testimonial-author">
-                        <div class="author-image">
-                            <img src="images/image.png" alt="Kundin Anna">
-                        </div>
-                        <div class="author-info">
-                            <span class="author-tag">Kundin</span>
-                            <h4 class="author-name">Anna</h4>
-                            <p class="author-role">Online-Coach</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="testimonial-card card" data-aos="fade-up" style="display: none;">
-                    <p class="testimonial-quote">"Eine absolute Bereicherung für unser Marketing! Die
-                        automatisierten Nachrichten sparen uns enorm viel Zeit und die Erfolgsquote ist top."</p>
-                    <div class="testimonial-author">
-                        <div class="author-image">
-                            <img src="images/image.png" alt="Kunde Ben">
-                        </div>
-                        <div class="author-info">
-                            <span class="author-tag">Kunde</span>
-                            <h4 class="author-name">Ben</h4>
-                            <p class="author-role">Fotograf</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="testimonial-card card" data-aos="fade-up" style="display: none;">
-                    <p class="testimonial-quote">"Der Support ist erstklassig. Bei Fragen oder Anpassungswünschen
-                        wurde
-                        uns immer schnell und kompetent geholfen. So macht Zusammenarbeit Spaß!"</p>
-                    <div class="testimonial-author">
-                        <div class="author-image">
-                            <img src="images/image.png" alt="Kundin Lena">
-                        </div>
-                        <div class="author-info">
-                            <span class="author-tag">Kundin</span>
-                            <h4 class="author-name">Lena</h4>
-                            <p class="author-role">Agenturinhaberin</p>
-                        </div>
-                    </div>
+                <div class="slider-nav next-btn">
+                    <i class="fas fa-chevron-right"></i>
                 </div>
             </div>
-
-            <button id="loadMoreTestimonials" class="btn btn-secondary" style="margin-top: 30px;">Mehr Stimmen
-                laden</button>
-            <button id="showLessTestimonials" class="btn btn-secondary" style="margin-top: 30px; display: none;">Weniger
-                anzeigen</button>
         </div>
     </section>
 
     <!-- Pricing Section -->
     <section id="pricing" class="pricing section">
-        <div class="container">
+        <div class="container pricing-container">
             <div class="section-subtitle">PAKETE & PREISE</div>
             <h2>Wählen Sie das passende Paket für Ihre Anforderungen</h2>
             <p>Alle Pakete beinhalten unsere KI-Technologie und persönliche Betreuung</p>
 
-            <div class="pricing-packages">
-                <div class="package-card active" data-aos="fade-up" data-aos-delay="100" data-package="premium">
+            <div class="pricing-tabs">
+                <div class="pricing-tab active" data-package="basic">
                     <h3>Premium Connect</h3>
                     <p>Personalisierte Qualitative Text Nachrichten</p>
-                    <ul class="package-features">
-                        <li>Personalisierte Texte in KI erstellt</li>
-                        <li>Menschliche Qualitätskontrolle</li>
-                        <li>Zielgruppenanalyse & -filterung</li>
-                        <li>Automatisierter Versand</li>
-                        <li>Wöchentliche Performance-Reports</li>
-                        <li>Persönlicher Account Manager</li>
-                    </ul>
                 </div>
-
-                <div class="package-card" data-aos="fade-up" data-aos-delay="200" data-package="audio">
+                <div class="pricing-tab" data-package="premium">
                     <h3>Audio Impact</h3>
                     <p>Personalisierte Audio Nachrichten</p>
-                    <ul class="package-features">
-                        <li>Personalisierte Texte in Audio umgewandelt</li>
-                        <li>KI-Stimme oder geklonte Stimme</li>
-                        <li>Zielgruppenanalyse & -filterung</li>
-                        <li>Automatisierter Versand</li>
-                        <li>Wöchentliche Performance-Reports</li>
-                        <li>Persönlicher Account Manager</li>
-                        <li>Alle Funktionen aus Premium Connect</li>
-                    </ul>
                 </div>
-
-                <div class="package-card" data-aos="fade-up" data-aos-delay="300" data-package="ultimate">
+                <div class="pricing-tab" data-package="enterprise">
                     <h3>Ultimate Conversion</h3>
                     <p>Personalisierte Avatar Video Nachrichten</p>
-                    <ul class="package-features">
-                        <li>Personalisierte Texte in Audio umgewandelt</li>
-                        <li>Integration in KI-Avatar Videos</li>
-                        <li>Realistischer persönlicher Klon möglich</li>
-                        <li>Zielgruppenanalyse & -filterung</li>
-                        <li>Automatisierter Versand</li>
-                        <li>Wöchentliche Performance-Reports</li>
-                        <li>Persönlicher Account Manager</li>
-                        <li>Alle Funktionen aus Audio Impact</li>
-                        <li>Maximale Conversion-Rate</li>
-                    </ul>
                 </div>
             </div>
 
-            <div class="pricing-configurator">
-                <h3>Konfigurieren Sie Ihr Paket</h3>
-                <div class="config-section">
-                    <h4>Wählen Sie die Laufzeit:</h4>
-                    <div class="duration-options">
-                        <div class="duration-option active" data-duration="3">
-                            <h5>3 Monate</h5>
-                            <p>Regulärer Preis</p>
+            <div class="pricing-content">
+                <div class="pricing-features">
+                    <h4>Paket-Details</h4>
+
+                    <div class="package-features basic-features active">
+                        <h5>KI-Erweiterungen</h5>
+                        <ul>
+                            <li class="ki-feature">Personalisierte Texte in KI erstellt</li>
+                        </ul>
+                        <h5>Standardleistungen</h5>
+                        <ul>
+                            <li>Menschliche Qualitätskontrolle</li>
+                            <li>Zielgruppenanalyse & -filterung</li>
+                            <li>Automatisierter Versand</li>
+                            <li>Wöchentliche Performance-Reports</li>
+                            <li>Persönlicher Account Manager</li>
+                        </ul>
+                    </div>
+
+                    <div class="package-features premium-features">
+                        <h5>KI-Erweiterungen</h5>
+                        <ul>
+                            <li class="ki-feature">Personalisierte Texte in Audio umgewandelt</li>
+                            <li class="ki-feature">KI-Stimme oder geklonte Stimme</li>
+                        </ul>
+                        <h5>Standardleistungen</h5>
+                        <ul>
+                            <li>Menschliche Qualitätskontrolle</li>
+                            <li>Zielgruppenanalyse & -filterung</li>
+                            <li>Automatisierter Versand</li>
+                            <li>Wöchentliche Performance-Reports</li>
+                            <li>Persönlicher Account Manager</li>
+                        </ul>
+                    </div>
+
+                    <div class="package-features enterprise-features">
+                        <h5>KI-Erweiterungen</h5>
+                        <ul>
+                            <li class="ki-feature">Personalisierte Texte in Audio umgewandelt</li>
+                            <li class="ki-feature">Integration in KI-Avatar Videos</li>
+                            <li class="ki-feature">Realistischer persönlicher Klon möglich</li>
+                        </ul>
+                        <h5>Standardleistungen</h5>
+                        <ul>
+                            <li>Menschliche Qualitätskontrolle</li>
+                            <li>Zielgruppenanalyse & -filterung</li>
+                            <li>Automatisierter Versand</li>
+                            <li>Wöchentliche Performance-Reports</li>
+                            <li>Persönlicher Account Manager</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="pricing-configurator">
+                    <h3>Konfigurieren Sie Ihr Paket</h3>
+
+                    <div class="config-section">
+                        <h4>Wählen Sie die Laufzeit:</h4>
+                        <div class="duration-options">
+                            <div class="duration-option active" data-duration="3" data-discount="0">
+                                <h5>3 Monate</h5>
+                                <p>Regulärer Preis</p>
+                            </div>
+                            <div class="duration-option" data-duration="6" data-discount="10">
+                                <h5>6 Monate</h5>
+                                <p>10% Rabatt pro Monat</p>
+                                <div class="discount-badge">-10%</div>
+                            </div>
+                            <div class="duration-option" data-duration="12" data-discount="20">
+                                <h5>12 Monate</h5>
+                                <p>20% Rabatt pro Monat</p>
+                                <div class="discount-badge">-20%</div>
+                            </div>
                         </div>
-                        <div class="duration-option" data-duration="6">
-                            <h5>6 Monate</h5>
-                            <p>10% Rabatt pro Monat</p>
-                            <div class="discount-badge">-10%</div>
-                        </div>
-                        <div class="duration-option" data-duration="12">
-                            <h5>12 Monate</h5>
-                            <p>20% Rabatt pro Monat</p>
-                            <div class="discount-badge">-20%</div>
-                        </div>
                     </div>
-                </div>
 
-                <div class="config-section">
-                    <h4>Anzahl der DMs pro Monat:</h4>
-                    <div class="dm-slider-container">
-                        <input type="range" min="2250" max="10500" step="250" value="2250" class="dm-slider"
-                            id="dmSlider">
-                        <div class="dm-slider-track" id="dmSliderTrack"></div>
-                        <div class="dm-value" id="dmValue">2.250</div>
-                        <div class="dm-slider-labels">
-                            <span class="dm-slider-min">2.250</span>
-                            <span class="dm-slider-max">10.500</span>
+                    <div class="config-section">
+                        <h4>Anzahl der DMs pro Monat:</h4>
+                        <div class="dm-slider-container">
+                            <input type="range" min="2250" max="10500" step="250" value="2250" class="dm-slider"
+                                id="dmSlider">
+                            <div class="dm-value" id="dmValue">2.250</div>
+                            <div class="dm-slider-labels">
+                                <span class="dm-slider-min">2.250</span>
+                                <span class="dm-slider-max">10.500</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <div class="pricing-summary">
-                <h4>Ihre Konfiguration</h4>
-                <div class="summary-item">
-                    <div class="summary-label">Paket:</div>
-                    <div class="summary-value" id="summaryPackage">Premium Connect</div>
-                </div>
-                <div class="summary-item">
-                    <div class="summary-label">Laufzeit:</div>
-                    <div class="summary-value" id="summaryDuration">3 Monate</div>
-                </div>
-                <div class="summary-item">
-                    <div class="summary-label">DMs:</div>
-                    <div class="summary-value" id="summaryDMs">2.250 DMs pro Monat</div>
-                </div>
-                <div class="summary-item">
-                    <div class="summary-label">Tool-Kosten:</div>
-                    <div class="summary-value" id="summaryToolCosts">125 € pro Monat</div>
-                </div>
-                <div class="summary-item">
-                    <div class="summary-label">Einmalige Aufsetzungskosten:</div>
-                    <div class="summary-value" id="summarySetupCosts">600 € (einmalig)</div>
-                </div>
-                <div class="summary-divider"></div>
-                <div class="summary-item summary-total">
-                    <div class="summary-label">Monatlicher Preis:</div>
-                    <div class="summary-value" id="summaryMonthlyPrice">1.575 € pro Monat</div>
-                </div>
-                <div class="summary-item summary-total">
-                    <div class="summary-label">Gesamtpreis:</div>
-                    <div class="summary-value" id="summaryTotalPrice">5.325 €</div>
-                </div>
-                <a href="index.html#contact" class="btn btn-primary btn-full">Jetzt anfragen</a>
-            </div>
-        </div>
-    </section>
+                    <div class="pricing-summary">
+                        <h4>Ihre Konfiguration</h4>
 
-    <!-- Features Section -->
-    <section id="features" class="features section">
-        <div class="container">
-            <div class="section-subtitle">FUNKTIONEN</div>
-            <h2>Was Dynaamiq AI besonders macht</h2>
+                        <div class="summary-item">
+                            <div class="summary-label">Paket:</div>
+                            <div class="summary-value" id="summaryPackage">Premium Connect</div>
+                        </div>
 
-            <div class="features-grid">
-                <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
-                    <div class="feature-icon">
-                        <i class="fas fa-brain"></i>
+                        <div class="summary-item">
+                            <div class="summary-label">Laufzeit:</div>
+                            <div class="summary-value" id="summaryDuration">3 Monate</div>
+                        </div>
+
+                        <div class="summary-item">
+                            <div class="summary-label">DMs:</div>
+                            <div class="summary-value" id="summaryDMs">2.250 DMs pro Monat</div>
+                        </div>
+
+                        <div class="summary-item">
+                            <div class="summary-label">Tool-Kosten:</div>
+                            <div class="summary-value" id="summaryToolCosts">125 € pro Monat</div>
+                        </div>
+
+                        <div class="summary-item">
+                            <div class="summary-label">Einmalige Aufsetzungskosten:</div>
+                            <div class="summary-value" id="summarySetupCosts">600 € (einmalig)</div>
+                        </div>
+
+                        <div class="summary-divider"></div>
+
+                        <div class="summary-item">
+                            <div class="summary-label">Monatlicher Preis:</div>
+                            <div class="summary-value" id="summaryMonthlyPrice">1.575 € pro Monat</div>
+                        </div>
+
+                        <div class="summary-divider"></div>
+
+                        <div class="summary-total">
+                            <div class="summary-label">Gesamtpreis:</div>
+                            <div class="total-price" id="summaryTotalPrice">5.325 €</div>
+                        </div>
+
+                        <a href="index.html#contact" class="btn btn-primary btn-full" id="requestButton">Jetzt
+                            anfragen</a>
                     </div>
-                    <h3>Fortschrittliche KI</h3>
-                    <p>Unsere lernfähige KI wird mit jeder versendeten Nachricht präziser und effektiver.</p>
-                </div>
-
-                <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
-                    <div class="feature-icon">
-                        <i class="fas fa-cogs"></i>
-                    </div>
-                    <h3>Automatisierung</h3>
-                    <p>Sparen Sie Zeit durch automatisierte Prozesse bei gleichzeitig höchster Qualität.</p>
-                </div>
-
-                <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
-                    <div class="feature-icon">
-                        <i class="fas fa-chart-pie"></i>
-                    </div>
-                    <h3>Datenanalyse</h3>
-                    <p>Detaillierte Einblicke in alle relevanten KPIs für kontinuierliche Optimierung.</p>
-                </div>
-
-                <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
-                    <div class="feature-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <h3>Zielgruppenanalyse</h3>
-                    <p>Präzise Identifikation Ihrer idealen Kunden für maximale Relevanz.</p>
-                </div>
-
-                <div class="feature-card" data-aos="fade-up" data-aos-delay="500">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3>Compliance</h3>
-                    <p>Alle Prozesse entsprechen den aktuellen Datenschutzrichtlinien.</p>
-                </div>
-
-                <div class="feature-card" data-aos="fade-up" data-aos-delay="600">
-                    <div class="feature-icon">
-                        <i class="fas fa-headset"></i>
-                    </div>
-                    <h3>Support</h3>
-                    <p>Persönliche Betreuung und regelmäßige Strategiegespräche.</p>
                 </div>
             </div>
         </div>
@@ -620,51 +610,72 @@
 
     <!-- Team Section -->
     <section id="team" class="team section">
-        <div class="container">
-            <div class="section-subtitle">UNSER TEAM</div>
+        <div class="container team-container">
+            <div class="section-subtitle">WARUM DYNAAMIQ</div>
             <h2>Die Köpfe hinter Dynaamiq AI</h2>
+            <p class="section-intro">Unsere Mission: Effiziente und persönliche Kundenakquise neu definieren</p>
+
+            <p class="team-description">Bei Dynaamiq AI kombinieren wir modernste KI-Technologien mit menschlichem
+                Feingefühl, um personalisierte Nachrichten in Form von Texten, Audios und Videos zu erstellen. Unser
+                Team aus Experten überwacht und optimiert kontinuierlich den Akquise-Prozess, um sicherzustellen, dass
+                jede Nachricht authentisch und wirkungsvoll ist.</p>
 
             <div class="team-grid">
-                <div class="team-member" data-aos="fade-up" data-aos-delay="100">
-                    <div class="member-image">
-                        <img src="images/team_member_1.jpeg" alt="Jonas Ockert">
-                    </div>
-                    <h3>Martin Traut</h3>
-                    <p class="member-role">Gründer & CEO</p>
-                    <p class="member-bio">Verantwortlich für reibungslose Abläufe und Skalierung der Kundenprojekte.</p>
-                </div>
-
-                <div class="team-member" data-aos="fade-up" data-aos-delay="200">
-                    <div class="member-image">
-                        <img src="images/team_member_2.jpeg" alt="Raphael Rau">
-                    </div>
-                    <h3>Hendrik Neubauer</h3>
-                    <p class="member-role">Customer Success Manager</p>
-                    <p class="member-bio">Sorgt für optimale Ergebnisse und kontinuierliche Verbesserung der
-                        Kundenkampagnen.</p>
-                </div>
-
                 <div class="team-member" data-aos="fade-up" data-aos-delay="300">
                     <div class="member-image">
-                        <img src="images/team_member_3.jpeg" alt="Martin Traut">
+                        <img src="images/team_member_1.jpeg" alt="Martin Traut">
                     </div>
-                    <h3>Jonas Ockert</h3>
-                    <p class="member-role">Head of Operations</p>
-                    <p class="member-bio">Experte für KI-gestützte Marketingstrategien mit über 10 Jahren Erfahrung in
-                        der digitalen Kundenakquise.</p>
+                    <h3>Martin Traut</h3>
+                    <div class="member-position">Gründer und Visionär bei Dynaamiq AI</div>
+                    <p class="member-bio">Martin Traut ist der kreative Kopf hinter Dynaamiq AI. Als Visionär kombiniert
+                        er skalierbare KI-Systeme mit digitaler Wachstumsstrategie, um Unternehmen schnell neue Kontakte
+                        zu ermöglichen – und ihr Wachstum nachhaltig zu fördern.</p>
                 </div>
-
                 <div class="team-member" data-aos="fade-up" data-aos-delay="400">
                     <div class="member-image">
-                        <img src="images/team_member_4.jpeg" alt="Hendrik Neubauer">
+                        <img src="images/team_member_2.jpeg" alt="Hendrik Neubauer">
                     </div>
-
+                    <h3>Hendrik Neubauer</h3>
+                    <div class="member-position">Mitgründer und Copywriting-Spezialist bei Dynaamiq AI</div>
+                    <p class="member-bio">Hendrik Neubauer ist Experte für psychologisch fundierte Texte und
+                        überzeugende
+                        Kundenansprachen. Er entwickelt verkaufsstarke Copy für die Instagram-Kaltakquise, die exakt auf
+                        die
+                        Zielgruppe zugeschnitten ist und maximale Conversion erzielt.</p>
+                </div>
+                <div class="team-member" data-aos="fade-up" data-aos-delay="100">
+                    <div class="member-image">
+                        <img src="images/team_member_3.jpeg" alt="Jonas Ockert">
+                    </div>
+                    <h3>Jonas Ockert</h3>
+                    <div class="member-position">Mitgründer und Vertriebsleiter bei Dynaamiq AI</div>
+                    <p class="member-bio">Jonas Ockert verantwortet den gesamten Vertriebsprozess bei Dynaamiq AI. Als
+                        Sales-Profi strukturiert und managt er unsere Verkaufsstrategie – mit einem klaren Fokus auf
+                        Performance, Skalierung und Abschlussstärke.</p>
+                </div>
+                <div class="team-member" data-aos="fade-up" data-aos-delay="200">
+                    <div class="member-image">
+                        <img src="images/team_member_4.jpeg" alt="Raphael Rau">
+                    </div>
                     <h3>Raphael Rau</h3>
-                    <p class="member-role">Co-Founder & CTO</p>
-                    <p class="member-bio">KI-Entwickler und Datenanalyst mit Fokus auf maschinelles Lernen und
-                        Prozessautomatisierung.</p>
+                    <div class="member-position">Automatisierungsexperte bei Dynaamiq AI</div>
+                    <p class="member-bio">Raphael Rau ist zuständig für die technische Umsetzung unserer Systeme. Er
+                        entwickelt und implementiert intelligente Automatisierungen und KI-Prozesse, die unseren Kunden
+                        maximale Effizienz und Skalierbarkeit ermöglichen.</p>
                 </div>
             </div>
+
+        </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section id="cta" class="cta">
+        <div class="container">
+            <h2>Bereit für mehr Kunden?</h2>
+            <p>Kontaktieren Sie uns noch heute für eine kostenlose Beratung und erfahren Sie, wie Dynaamiq AI Ihr
+                Instagram-Marketing revolutionieren kann.</p>
+            <a href="index.html#contact" class="btn btn-primary btn-large">Jetzt Kontakt aufnehmen</a>
         </div>
     </section>
 
@@ -672,8 +683,10 @@
     <section id="contact" class="contact section">
         <div class="container contact-container">
             <div class="contact-info">
-                <div class="section-subtitle">KONTAKT</div>
-                <h2>Sprechen Sie mit uns</h2>
+                <div class="section-header-container">
+                    <div class="section-subtitle">KONTAKT</div>
+                    <h2>Sprechen Sie mit uns</h2>
+                </div>
                 <p>Füllen Sie das Formular aus oder kontaktieren Sie uns direkt. Wir melden uns innerhalb von 24 Stunden
                     bei Ihnen.</p>
 
@@ -684,7 +697,7 @@
                         </div>
                         <div class="contact-text">
                             <h4>E-Mail</h4>
-                            <p>info@dynaamiq.ai</p>
+                            <p><a href="mailto:info@dynaamiq.ai">info@dynaamiq.ai</a></p>
                         </div>
                     </div>
                     <div class="contact-item">
@@ -693,7 +706,7 @@
                         </div>
                         <div class="contact-text">
                             <h4>Telefon</h4>
-                            <p>+49 (0) 123 456 789</p>
+                            <p><a href="tel:+4915222398746">+49 152 22398746</a></p>
                         </div>
                     </div>
                     <div class="contact-item">
@@ -712,11 +725,11 @@
                 <form id="consultationForm">
                     <div class="form-group">
                         <label for="name" class="form-label">Name</label>
-                        <input type="text" id="name" class="form-control" required="">
+                        <input type="text" id="name" class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label for="email" class="form-label">E-Mail</label>
-                        <input type="email" id="email" class="form-control" required="">
+                        <input type="email" id="email" class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label for="phone" class="form-label">Telefon</label>
@@ -728,7 +741,7 @@
                     </div>
                     <div class="form-group">
                         <label for="message" class="form-label">Nachricht</label>
-                        <textarea id="message" class="form-control" required=""></textarea>
+                        <textarea id="message" class="form-control" required></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary btn-full">Anfrage senden</button>
                 </form>
@@ -738,77 +751,70 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
+        <div class="container footer-container">
+            <div class="footer-info">
                 <div class="footer-logo">
                     <img src="images/dynaamiq_logo.png" alt="Dynaamiq AI Logo">
-                    <p>Dynaamiq AI revolutioniert die Instagram-Kaltakquise durch den Einsatz fortschrittlicher
-                        KI-Technologie, die personalisierte Nachrichten erstellt und automatisiert versendet.</p>
                 </div>
-
-                <div class="footer-links">
-                    <div class="footer-links-column">
-                        <h4>Pakete</h4>
-                        <ul>
-                            <li><a href="#pricing">Premium Connect</a></li>
-                            <li><a href="#pricing">Audio Impact</a></li>
-                            <li><a href="#pricing">Ultimate Conversion</a></li>
-                            <li><a href="#pricing">Preise & Konfiguration</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="footer-links-column">
-                        <h4>Unternehmen</h4>
-                        <ul>
-                            <li><a href="#team">Über uns</a></li>
-                            <li><a href="#testimonials">Kundenstimmen</a></li>
-                            <li><a href="#contact">Kontakt</a></li>
-                            <li><a href="#">Karriere</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="footer-links-column">
-                        <h4>Rechtliches</h4>
-                        <ul>
-                            <li><a href="impressum.html">Impressum</a></li>
-                            <li><a href="datenschutz.html">Datenschutz</a></li>
-                            <li><a href="agb.html">AGB</a></li>
-                            <li><a href="#">Cookie-Einstellungen</a></li>
-                        </ul>
-                    </div>
+                <p class="footer-about">Dynaamiq AI revolutioniert die Instagram-Kaltakquise durch den Einsatz
+                    fortschrittlicher KI-Technologie, die personalisierte Nachrichten erstellt und automatisiert
+                    versendet.</p>
+                <div class="footer-social">
+                    <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
                 </div>
             </div>
 
-            <div class="footer-bottom">
-                <p>&copy; 2025 Dynaamiq AI. Alle Rechte vorbehalten.</p>
-                <div class="social-links">
-                    <a href="https://www.instagram.com/dynaamiq.ai/" target="_blank"><i
-                            class="fab fa-instagram"></i></a>
-                    <a href="https://www.linkedin.com/company/dynaamiq-ai/" target="_blank"><i
-                            class="fab fa-linkedin"></i></a>
-                </div>
+            <div class="footer-links-column">
+                <h3 class="footer-title">Pakete</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html#pricing">Premium Connect</a></li>
+                    <li><a href="index.html#pricing">Audio Impact</a></li>
+                    <li><a href="index.html#pricing">Ultimate Conversion</a></li>
+                    <li><a href="index.html#pricing">Preise & Konfiguration</a></li>
+                </ul>
             </div>
+
+            <div class="footer-links-column">
+                <h3 class="footer-title">Unternehmen</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html#team">Über uns</a></li>
+                    <li><a href="index.html#testimonials">Kundenstimmen</a></li>
+                    <li><a href="index.html#contact">Kontakt</a></li>
+                    <li><a href="#">Karriere</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-links-column">
+                <h3 class="footer-title">Rechtliches</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Impressum</a></li>
+                    <li><a href="#">Datenschutz</a></li>
+                    <li><a href="#">AGB</a></li>
+                    <li><a href="#">Cookie-Einstellungen</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="container footer-bottom">
+            <p>&copy; 2025 Dynaamiq AI. Alle Rechte vorbehalten.</p>
         </div>
     </footer>
 
-    <!-- Scroll to Top Button -->
+    <!-- Back to Top Button -->
     <a href="#" class="back-to-top">
         <i class="fas fa-arrow-up"></i>
     </a>
 
-    <!-- Background Music -->
-    <audio id="background-music" loop>
-        <!-- WICHTIG: Pfad zur Musikdatei anpassen -->
-        <source src="images/musik.mp3" type="audio/mpeg">
-        Dein Browser unterstützt das Audio-Element nicht.
-    </audio>
-    <button id="play-pause-button" class="music-control-button" aria-label="Musik abspielen/pausieren">
-        <i class="fas fa-play"></i>
-    </button>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
+    <!-- Scripts -->
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/script.js"></script>
+
+    <script defer data-domain="manus.space"
+        src="https://plausible.io/js/script.file-downloads.hash.outbound-links.pageview-props.revenue.tagged-events.js"></script>
 </body>
 
 </html>
