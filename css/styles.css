@@ -916,7 +916,6 @@ img {
   border-radius: var(--border-radius);
   overflow: hidden;
   margin-bottom: 1.5rem;
-  filter: grayscale(70%);
 }
 
 .member-image img {
@@ -926,6 +925,7 @@ img {
   object-position: center top;
   border-radius: 12px;
   transition: var(--transition);
+  filter: grayscale(70%);
 }
 
 .team-member:hover .member-image img {
