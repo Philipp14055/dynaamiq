@@ -137,6 +137,13 @@ document.addEventListener('DOMContentLoaded', function () {
             const val = parseInt(dmSlider.value);
             const percentage = ((val - min) / (max - min)) * 100;
 
+            // Update the gradient background
+            dmSlider.style.background = `linear-gradient(to right, 
+                var(--primary-color) 0%, 
+                var(--secondary-color) ${percentage}%, 
+                rgba(255, 255, 255, 0.1) ${percentage}%, 
+                rgba(255, 255, 255, 0.1) 100%)`;
+
             // Update the track element width
             const dmSliderTrack = document.getElementById('dmSliderTrack');
             if (dmSliderTrack) {
