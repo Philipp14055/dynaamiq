@@ -239,13 +239,6 @@ img {
   margin-left: 2rem;
 }
 
-.navbar-cta-icon {
-  display: none;
-  /* Hidden by default */
-  font-size: 1.2rem;
-  /* Adjust icon size as needed */
-}
-
 .navbar-toggle {
   display: none;
   background: none;
@@ -1260,31 +1253,9 @@ textarea.form-control {
     display: block;
   }
 
-  .navbar-cta .navbar-cta-text {
-    display: none;
-    /* Hide text on smaller screens */
-  }
-
-  .navbar-cta .navbar-cta-icon {
-    display: inline-block;
-    /* Show icon */
-    margin-left: 0;
-    /* Remove margin if text is hidden */
-  }
-
   .navbar-cta {
-    padding: 0.75rem;
-    /* Adjust padding for icon-only button */
-    width: auto;
-    /* Allow button to shrink to icon size */
-    min-width: 40px;
-    /* Ensure a minimum clickable area */
-    height: 40px;
-    /* Ensure a minimum clickable area */
-    display: flex;
-    /* For centering icon if needed */
-    align-items: center;
-    justify-content: center;
+    display: none;
+    /* Hide the entire button on smaller screens */
   }
 
   .hero-container,
