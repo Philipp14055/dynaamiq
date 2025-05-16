@@ -276,6 +276,7 @@ Gesamtpreis: ${totalPrice}
 -------------------------------------`;
 
             sessionStorage.setItem('dynaamiqPackageInquiry', inquiryDetails);
+            prefillContactFormFromPricing(); // Call directly to ensure immediate update
             // Allow default anchor behavior to navigate to #contact
         });
     }
