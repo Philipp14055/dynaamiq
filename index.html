@@ -732,26 +732,35 @@
             </div>
 
             <div class="contact-form">
-                <form id="consultationForm" action="mailto:philipp.stapf@outlook.de" method="POST" enctype="text/plain">
+                <form id="consultationForm" action="https://formspree.io/f/meognljp" method="POST">
                     <div class="form-group">
                         <label for="name" class="form-label">Name</label>
-                        <input type="text" id="name" class="form-control" required>
+                        <input type="text" id="name" name="name" class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label for="email" class="form-label">E-Mail</label>
-                        <input type="email" id="email" class="form-control" required>
+                        <input type="email" id="email" name="email" class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label for="phone" class="form-label">Telefon</label>
-                        <input type="tel" id="phone" class="form-control">
+                        <input type="tel" id="phone" name="phone" class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="company" class="form-label">Unternehmen</label>
-                        <input type="text" id="company" class="form-control">
+                        <input type="text" id="company" name="company" class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="message" class="form-label">Nachricht</label>
-                        <textarea id="message" class="form-control" required></textarea>
+                        <textarea id="message" name="message" class="form-control" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="paketAuswahl" class="form-label">Paketauswahl</label>
+                        <select id="paketAuswahl" name="paket" class="form-control">
+                            <option value="" selected>Keine spezifische Paketauswahl</option>
+                            <option value="Premium Connect">Premium Connect</option>
+                            <option value="Audio Impact">Audio Impact</option>
+                            <option value="Ultimate Conversion">Ultimate Conversion</option>
+                        </select>
                     </div>
                     <div class="form-group gdpr-consent">
                         <input type="checkbox" id="gdpr" name="gdpr" required>

@@ -66,19 +66,22 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Testimonial slider (New version from Andere Siete/test.js)
-    const testimonialCards = document.querySelectorAll('.testimonial-card');
-    const testimonialDotsContainer = document.querySelector('.testimonial-dots'); // Renamed for clarity
-    const prevBtn = document.querySelector('.testimonials-slider .prev-btn'); // Scoped to slider
-    const nextBtn = document.querySelector('.testimonials-slider .next-btn'); // Scoped to slider
+    // Testimonial slider 
+    const testimonialCardsContainer = document.querySelector('.testimonial-cards'); // Changed selector
+    const testimonialCards = testimonialCardsContainer ? Array.from(testimonialCardsContainer.children) : []; // Get children
+    const testimonialDotsContainer = document.querySelector('.testimonial-dots');
+    const prevBtn = document.querySelector('.testimonials-slider .prev-btn');
+    const nextBtn = document.querySelector('.testimonials-slider .next-btn');
     let currentSlide = 0;
-    let visibleSlides = 3; // Default for desktop
+    let visibleSlides = 3;
     let autoSlideInterval;
 
     function updateVisibleSlidesAndCardWidths() {
-        if (window.innerWidth <= 768) { // Matches @media (max-width: 768px)
+        if (!testimonialCardsContainer) return; // Exit if container not found
+
+        if (window.innerWidth <= 768) {
             visibleSlides = 1;
-        } else if (window.innerWidth <= 992) { // Matches @media (max-width: 992px)
+        } else if (window.innerWidth <= 992) {
             visibleSlides = 2;
         } else {
             visibleSlides = 3;
@@ -90,35 +93,31 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        testimonialCards.forEach((card, index) => {
-            let isVisible = false;
-            for (let i = 0; i < visibleSlides; i++) {
-                if ((currentSlide + i) % totalCards === index) {
-                    isVisible = true;
-                    break;
-                }
-            }
-            card.style.display = isVisible ? 'flex' : 'none';
-        });
+        // Hide all cards initially then show the ones that should be visible
+        testimonialCards.forEach(card => card.style.display = 'none');
 
-        // Update dots
+        for (let i = 0; i < visibleSlides; i++) {
+            const cardIndex = (currentSlide + i) % totalCards;
+            if (testimonialCards[cardIndex]) { // Check if card exists
+                testimonialCards[cardIndex].style.display = 'flex';
+            }
+        }
+
         if (testimonialDotsContainer) {
-            testimonialDotsContainer.innerHTML = ''; // Clear existing dots
+            testimonialDotsContainer.innerHTML = '';
             const numPages = Math.ceil(totalCards / visibleSlides);
 
-            if (numPages <= 1) { // Only one page or no scroll needed
+            if (numPages <= 1) {
                 testimonialDotsContainer.style.display = 'none';
             } else {
-                testimonialDotsContainer.style.display = 'flex'; // Restore display
+                testimonialDotsContainer.style.display = 'flex';
                 for (let i = 0; i < numPages; i++) {
                     const dot = document.createElement('span');
                     dot.classList.add('dot');
-                    // The active dot corresponds to the page of the currentSlide
                     if (i === Math.floor(currentSlide / visibleSlides)) {
                         dot.classList.add('active');
                     }
                     dot.addEventListener('click', () => {
-                        // When a dot is clicked, show the first slide of that "page"
                         showSlide(i * visibleSlides);
                     });
                     testimonialDotsContainer.appendChild(dot);
@@ -130,33 +129,27 @@ document.addEventListener('DOMContentLoaded', function () {
     function showSlide(slideIndex) {
         const totalCards = testimonialCards.length;
         if (totalCards === 0) return;
-
-        // Ensure slideIndex is within bounds and handles potential negative values from prevSlide
         currentSlide = (slideIndex % totalCards + totalCards) % totalCards;
-
-        // If moving to a specific slide that isn't the start of a "page" for dot calculation,
-        // it's fine. The dot calculation Math.floor(currentSlide / visibleSlides) will handle it.
-
-        updateVisibleSlidesAndCardWidths(); // This will also update/re-render dots and set the active one
+        updateVisibleSlidesAndCardWidths();
         resetAutoSlide();
     }
 
-    function nextSlide() {
+    function nextSlideFn() { // Renamed to avoid conflict if nextSlide is a global var
         const totalCards = testimonialCards.length;
-        if (totalCards <= visibleSlides && totalCards > 0) return; // No sliding if all cards are visible or fewer
+        if (totalCards <= visibleSlides && totalCards > 0) return;
         showSlide(currentSlide + 1);
     }
 
-    function prevSlide() {
+    function prevSlideFn() { // Renamed
         const totalCards = testimonialCards.length;
         if (totalCards <= visibleSlides && totalCards > 0) return;
         showSlide(currentSlide - 1);
     }
 
     function startAutoSlide() {
-        if (autoSlideInterval) clearInterval(autoSlideInterval); // Clear existing interval first
-        if (testimonialCards.length > visibleSlides) { // Only auto-slide if there's something to slide to
-            autoSlideInterval = setInterval(nextSlide, 7000);
+        if (autoSlideInterval) clearInterval(autoSlideInterval);
+        if (testimonialCards.length > visibleSlides) {
+            autoSlideInterval = setInterval(nextSlideFn, 7000);
         }
     }
 
@@ -166,53 +159,52 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (testimonialCards.length > 0) {
-        updateVisibleSlidesAndCardWidths(); // Initial setup for slides and dots
+        updateVisibleSlidesAndCardWidths();
         window.addEventListener('resize', () => {
-            // Recalculate visible slides and redraw everything, then jump to current slide's page start
-            // This ensures consistency if currentSlide is, e.g. 1, and visibleSlides changes from 1 to 2.
-            const currentSlidePageStart = Math.floor(currentSlide / visibleSlides) * visibleSlides;
-            // updateVisibleSlidesAndCardWidths(); // This will be called by showSlide
-            showSlide(currentSlide); // Re-evaluate and redraw based on new visibleSlides
+            // Recalculate and redraw based on new visibleSlides
+            // currentSlide should remain the same, let updateVisibleSlidesAndCardWidths handle display
+            showSlide(currentSlide);
         });
-        startAutoSlide(); // Start auto-slide after initial setup
+        startAutoSlide();
 
-        // Event listeners for prev/next buttons are still valid as they call showSlide
         if (prevBtn) {
-            prevBtn.addEventListener('click', prevSlide);
+            prevBtn.addEventListener('click', prevSlideFn);
         }
         if (nextBtn) {
-            nextBtn.addEventListener('click', nextSlide);
+            nextBtn.addEventListener('click', nextSlideFn);
         }
     }
 
-    // Pricing tabs (New version from Andere Siete/test.js)
+    // Pricing tabs
     const pricingTabs = document.querySelectorAll('.pricing-tab');
     const packageFeatures = document.querySelectorAll('.package-features');
+    const summaryPackageEl = document.getElementById('summaryPackage'); // Cache element
 
     if (pricingTabs.length > 0) {
         pricingTabs.forEach(tab => {
             tab.addEventListener('click', function () {
                 const packageType = this.getAttribute('data-package');
 
-                pricingTabs.forEach(tab => tab.classList.remove('active'));
+                pricingTabs.forEach(t => t.classList.remove('active'));
                 packageFeatures.forEach(features => features.classList.remove('active'));
 
                 this.classList.add('active');
-                document.querySelector(`.${packageType}-features`).classList.add('active');
-
-                // Update summary
-                if (document.getElementById('summaryPackage')) {
-                    document.getElementById('summaryPackage').textContent = this.querySelector('h3').textContent;
+                const currentPackageFeatures = document.querySelector(`.${packageType}-features`);
+                if (currentPackageFeatures) {
+                    currentPackageFeatures.classList.add('active');
                 }
 
-                // Update pricing based on package
+                if (summaryPackageEl) { // Use cached element
+                    summaryPackageEl.textContent = this.querySelector('h3').textContent;
+                }
                 updatePricing();
             });
         });
     }
 
-    // Duration options (New version from Andere Siete/test.js)
+    // Duration options
     const durationOptions = document.querySelectorAll('.duration-option');
+    const summaryDurationEl = document.getElementById('summaryDuration'); // Cache element
 
     if (durationOptions.length > 0) {
         durationOptions.forEach(option => {
@@ -221,354 +213,230 @@ document.addEventListener('DOMContentLoaded', function () {
                 this.classList.add('active');
 
                 const duration = this.getAttribute('data-duration');
-                if (document.getElementById('summaryDuration')) {
-                    document.getElementById('summaryDuration').textContent = `${duration} Monate`;
+                if (summaryDurationEl) { // Use cached element
+                    summaryDurationEl.textContent = `${duration} Monate`;
                 }
-
-                // Update pricing based on duration
                 updatePricing();
             });
         });
     }
 
-    // DM Slider (New version from Andere Siete/test.js)
+    // DM Slider
     const dmSlider = document.getElementById('dmSlider');
     const dmValue = document.getElementById('dmValue');
+    const summaryDMsEl = document.getElementById('summaryDMs'); // Cache element
 
     if (dmSlider && dmValue) {
-        dmSlider.value = 2500; // Initial value
+        // dmSlider.value = 2250; // Set initial value if needed (HTML already has value="2250")
         dmValue.textContent = formatNumber(dmSlider.value);
-        if (document.getElementById('summaryDMs')) {
-            document.getElementById('summaryDMs').textContent = `${formatNumber(dmSlider.value)} DMs pro Monat`;
+        if (summaryDMsEl) { // Use cached element
+            summaryDMsEl.textContent = `${formatNumber(dmSlider.value)} DMs pro Monat`;
         }
         updateSliderBackground();
 
         dmSlider.addEventListener('input', function () {
             const value = this.value;
             dmValue.textContent = formatNumber(value);
-            if (document.getElementById('summaryDMs')) {
-                document.getElementById('summaryDMs').textContent = `${formatNumber(value)} DMs pro Monat`;
+            if (summaryDMsEl) { // Use cached element
+                summaryDMsEl.textContent = `${formatNumber(value)} DMs pro Monat`;
             }
-            updateSliderBackground();
-            updatePricing();
+            updatePricing(); // updatePricing first
+            updateSliderBackground(); // then update background
         });
     }
 
-    function updateSliderBackground() {
-        if (!dmSlider) return;
-        const min = parseInt(dmSlider.min);
-        const max = parseInt(dmSlider.max);
-        const val = parseInt(dmSlider.value);
-        const percentage = ((val - min) / (max - min)) * 100;
-
-        dmSlider.style.background = `linear-gradient(to right, 
-            var(--primary-color) 0%, 
-            var(--secondary-color) ${percentage}%, 
-            rgba(255, 255, 255, 0.1) ${percentage}%, 
-            rgba(255, 255, 255, 0.1) 100%)`;
-    }
-
-    // Pricing calculator (New version from Andere Siete/test.js)
-    function updatePricing() {
-        if (!document.querySelector('.pricing-tab.active') || !document.querySelector('.duration-option.active') || !dmSlider) {
-            return; // Exit if essential elements are not found
-        }
-
-        const activePackageTab = document.querySelector('.pricing-tab.active');
-        const activeDurationOption = document.querySelector('.duration-option.active');
-
-        const activePackage = activePackageTab.getAttribute('data-package');
-        const duration = parseInt(activeDurationOption.getAttribute('data-duration'));
-        const discount = parseInt(activeDurationOption.getAttribute('data-discount') || "0");
-        const dmCount = parseInt(dmSlider.value);
-
-        let basePrice, toolCosts, setupCosts;
-
-        if (activePackage === 'basic') {
-            basePrice = 0.5;
-            toolCosts = 125;
-            setupCosts = 600;
-        } else if (activePackage === 'premium') {
-            basePrice = 0.7;
-            toolCosts = 175;
-            setupCosts = 800;
-        } else if (activePackage === 'enterprise') {
-            basePrice = 0.9;
-            toolCosts = 225;
-            setupCosts = 1000;
-        } else {
-            return; // Unknown package
-        }
-
-        let monthlyPrice = (dmCount * basePrice) + toolCosts;
-        if (discount > 0) {
-            monthlyPrice = monthlyPrice * (1 - (discount / 100));
-        }
-        const totalPrice = (monthlyPrice * duration) + setupCosts;
-
-        if (document.getElementById('summaryToolCosts')) {
-            document.getElementById('summaryToolCosts').textContent = `${toolCosts} € pro Monat`;
-        }
-        if (document.getElementById('summarySetupCosts')) {
-            document.getElementById('summarySetupCosts').textContent = `${setupCosts} € (einmalig)`;
-        }
-        if (document.getElementById('summaryMonthlyPrice')) {
-            document.getElementById('summaryMonthlyPrice').textContent = `${formatNumber(monthlyPrice.toFixed(0))} € pro Monat`;
-        }
-        if (document.getElementById('summaryTotalPrice')) {
-            document.getElementById('summaryTotalPrice').textContent = `${formatNumber(totalPrice.toFixed(0))} €`;
-        }
-    }
-
-    if (document.querySelector('.pricing-tab')) {
+    // Initial pricing update on load
+    if (document.querySelector('.pricing-tab.active')) { // Ensure pricing elements are ready
         updatePricing();
     }
 
-    // Format numbers with thousand separator (from Andere Siete/test.js)
-    function formatNumber(num) {
-        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    }
-
-    // Initialize charts if they exist
-    if (typeof Chart !== 'undefined') {
-        // Messages Chart
-        const messagesCtx = document.getElementById('messagesChart');
-        if (messagesCtx) {
-            new Chart(messagesCtx, {
-                type: 'line',
-                data: {
-                    labels: ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'],
-                    datasets: [{
-                        label: 'Gesendete Nachrichten',
-                        data: [120, 190, 230, 250, 280, 190, 150],
-                        borderColor: '#FF6B00',
-                        backgroundColor: 'rgba(255, 107, 0, 0.1)',
-                        tension: 0.4,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                color: 'rgba(255, 255, 255, 0.05)'
-                            },
-                            ticks: {
-                                color: 'rgba(255, 255, 255, 0.7)'
-                            }
-                        },
-                        x: {
-                            grid: {
-                                color: 'rgba(255, 255, 255, 0.05)'
-                            },
-                            ticks: {
-                                color: 'rgba(255, 255, 255, 0.7)'
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        // Response Rate Chart
-        const responseRateCtx = document.getElementById('responseRateChart');
-        if (responseRateCtx) {
-            new Chart(responseRateCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Antworten', 'Keine Antwort'],
-                    datasets: [{
-                        data: [68, 32],
-                        backgroundColor: [
-                            '#FF1F8E',
-                            'rgba(255, 255, 255, 0.1)'
-                        ],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                color: 'rgba(255, 255, 255, 0.7)',
-                                padding: 20
-                            }
-                        }
-                    },
-                    cutout: '70%'
-                }
-            });
-        }
-
-        // Message Performance Chart
-        const performanceCtx = document.getElementById('messagePerformanceChart');
-        if (performanceCtx) {
-            new Chart(performanceCtx, {
-                type: 'radar',
-                data: {
-                    labels: ['Antwortrate', 'Conversion', 'Engagement', 'Vertrauen', 'ROI'],
-                    datasets: [
-                        {
-                            label: 'Text',
-                            data: [20, 15, 30, 40, 25],
-                            backgroundColor: 'rgba(255, 107, 0, 0.2)',
-                            borderColor: 'rgba(255, 107, 0, 1)',
-                            pointBackgroundColor: 'rgba(255, 107, 0, 1)',
-                            pointBorderColor: '#fff',
-                            pointHoverBackgroundColor: '#fff',
-                            pointHoverBorderColor: 'rgba(255, 107, 0, 1)'
-                        },
-                        {
-                            label: 'Audio',
-                            data: [40, 30, 50, 60, 45],
-                            backgroundColor: 'rgba(255, 31, 142, 0.2)',
-                            borderColor: 'rgba(255, 31, 142, 1)',
-                            pointBackgroundColor: 'rgba(255, 31, 142, 1)',
-                            pointBorderColor: '#fff',
-                            pointHoverBackgroundColor: '#fff',
-                            pointHoverBorderColor: 'rgba(255, 31, 142, 1)'
-                        },
-                        {
-                            label: 'Video',
-                            data: [60, 50, 70, 80, 65],
-                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                            borderColor: 'rgba(75, 192, 192, 1)',
-                            pointBackgroundColor: 'rgba(75, 192, 192, 1)',
-                            pointBorderColor: '#fff',
-                            pointHoverBackgroundColor: '#fff',
-                            pointHoverBorderColor: 'rgba(75, 192, 192, 1)'
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        r: {
-                            angleLines: {
-                                color: 'rgba(255, 255, 255, 0.1)'
-                            },
-                            grid: {
-                                color: 'rgba(255, 255, 255, 0.1)'
-                            },
-                            pointLabels: {
-                                color: 'rgba(255, 255, 255, 0.7)'
-                            },
-                            ticks: {
-                                backdropColor: 'transparent',
-                                color: 'rgba(255, 255, 255, 0.7)'
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            labels: {
-                                color: 'rgba(255, 255, 255, 0.7)'
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        // Conversion Funnel Chart
-        const conversionCtx = document.getElementById('conversionFunnelChart');
-        if (conversionCtx) {
-            new Chart(conversionCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['Gesendete DMs', 'Geöffnet', 'Beantwortet', 'Gespräch', 'Termin', 'Kunde'],
-                    datasets: [{
-                        label: 'Conversion Funnel',
-                        data: [1000, 850, 580, 320, 180, 75],
-                        backgroundColor: [
-                            'rgba(255, 107, 0, 0.8)',
-                            'rgba(255, 107, 0, 0.7)',
-                            'rgba(255, 107, 0, 0.6)',
-                            'rgba(255, 31, 142, 0.6)',
-                            'rgba(255, 31, 142, 0.7)',
-                            'rgba(255, 31, 142, 0.8)'
-                        ],
-                        borderWidth: 0,
-                        borderRadius: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    indexAxis: 'y',
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
-                    scales: {
-                        x: {
-                            beginAtZero: true,
-                            grid: {
-                                color: 'rgba(255, 255, 255, 0.05)'
-                            },
-                            ticks: {
-                                color: 'rgba(255, 255, 255, 0.7)'
-                            }
-                        },
-                        y: {
-                            grid: {
-                                display: false
-                            },
-                            ticks: {
-                                color: 'rgba(255, 255, 255, 0.7)'
-                            }
-                        }
-                    }
-                }
-            });
-        }
-    }
-
-    // Form submission
-    const consultationForm = document.getElementById('consultationForm');
-
-    if (consultationForm) {
-        consultationForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            // In a real implementation, you would send the form data to a server
-            // For now, just show a success message
-            const formContainer = consultationForm.parentElement;
-            formContainer.innerHTML = `
-                <div class="success-message">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#FF6B00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                    </svg>
-                    <h3>Vielen Dank für Ihre Anfrage!</h3>
-                    <p>Wir werden uns innerhalb von 24 Stunden bei Ihnen melden.</p>
-                </div>
-            `;
-        });
-    }
-
-    // Request button
+    // --- NEW LOGIC FOR PACKAGE SELECTION AND CONTACT FORM PREFILL ---
     const requestButton = document.getElementById('requestButton');
-
     if (requestButton) {
         requestButton.addEventListener('click', function () {
-            // Scroll to contact form
-            document.querySelector('#contact').scrollIntoView({
-                behavior: 'smooth'
-            });
+            const packageName = document.getElementById('summaryPackage')?.textContent || 'N/A';
+            const duration = document.getElementById('summaryDuration')?.textContent || 'N/A';
+            const dms = document.getElementById('summaryDMs')?.textContent || 'N/A';
+
+            const inquiryDetails = `Anfrage bezüglich Paketkonfiguration:\nPaket: ${packageName}\nLaufzeit: ${duration}\nDMs: ${dms}\n---`;
+            sessionStorage.setItem('dynaamiqPackageInquiry', inquiryDetails);
+            // The link's href attribute will handle navigation to #contact
         });
     }
-});
+
+    function prefillContactFormFromPricing() {
+        const inquiryDetails = sessionStorage.getItem('dynaamiqPackageInquiry');
+        if (inquiryDetails) {
+            const contactFormMessageTextarea = document.getElementById('message'); // Renamed for clarity
+            const paketAuswahlDropdown = document.getElementById('paketAuswahl');
+
+            if (contactFormMessageTextarea) {
+                // Prepend details and add a placeholder for user's message
+                contactFormMessageTextarea.value = `${inquiryDetails}\n\nIhre weitere Nachricht hier...`;
+            }
+
+            if (paketAuswahlDropdown) {
+                const packageNameMatch = inquiryDetails.match(/Paket: (.*?)\n/);
+                if (packageNameMatch && packageNameMatch[1]) {
+                    const selectedPackageName = packageNameMatch[1].trim();
+                    for (let i = 0; i < paketAuswahlDropdown.options.length; i++) {
+                        if (paketAuswahlDropdown.options[i].value === selectedPackageName) {
+                            paketAuswahlDropdown.selectedIndex = i;
+                            break;
+                        }
+                    }
+                }
+            }
+            sessionStorage.removeItem('dynaamiqPackageInquiry');
+        }
+    }
+    prefillContactFormFromPricing(); // Call on page load
+
+    // Chart.js initialization
+    // Assuming chart initialization logic is here or called from here
+    // ... (Your existing Chart.js code)
+    const chartContexts = {
+        messages: document.getElementById('messagesChart')?.getContext('2d'),
+        response: document.getElementById('responseRateChart')?.getContext('2d'),
+        performance: document.getElementById('messagePerformanceChart')?.getContext('2d'),
+        conversion: document.getElementById('conversionFunnelChart')?.getContext('2d')
+    };
+
+    const chartConfigs = {
+        messages: {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun'],
+                datasets: [{
+                    label: 'Gesendete Nachrichten',
+                    data: [1200, 1500, 1300, 1800, 2000, 1700],
+                    borderColor: '#FF6B00',
+                    backgroundColor: 'rgba(255, 107, 0, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: { maintainAspectRatio: false, plugins: { legend: { labels: { color: '#FFFFFF' } } }, scales: { y: { ticks: { color: '#FFFFFF' } }, x: { ticks: { color: '#FFFFFF' } } } }
+        },
+        response: {
+            type: 'bar',
+            data: {
+                labels: ['Kampagne A', 'Kampagne B', 'Kampagne C'],
+                datasets: [{
+                    label: 'Antwortrate (%)',
+                    data: [25, 35, 30],
+                    backgroundColor: ['rgba(255, 107, 0, 0.7)', 'rgba(255, 31, 142, 0.7)', 'rgba(0, 207, 232, 0.7)'],
+                }]
+            },
+            options: { maintainAspectRatio: false, plugins: { legend: { labels: { color: '#FFFFFF' } } }, scales: { y: { ticks: { color: '#FFFFFF' } }, x: { ticks: { color: '#FFFFFF' } } } }
+        },
+        performance: {
+            type: 'doughnut',
+            data: {
+                labels: ['Text', 'Audio', 'Video'],
+                datasets: [{
+                    data: [40, 30, 30],
+                    backgroundColor: ['#FF6B00', '#FF1F8E', '#00CFE8'],
+                    borderColor: '#0F1524',
+                }]
+            },
+            options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#FFFFFF' } } } }
+        },
+        conversion: {
+            type: 'funnel',
+            data: {
+                labels: ['Gesendet', 'Geöffnet', 'Geantwortet', 'Interessiert', 'Kunde'],
+                datasets: [{
+                    label: 'Conversion Funnel',
+                    data: [3000, 2500, 1500, 600, 200],
+                    backgroundColor: [
+                        'rgba(255, 107, 0, 0.8)',
+                        'rgba(255, 107, 0, 0.6)',
+                        'rgba(255, 107, 0, 0.4)',
+                        'rgba(255, 31, 142, 0.5)',
+                        'rgba(0, 207, 232, 0.6)'
+                    ],
+                    borderColor: '#0F1524'
+                }]
+            },
+            options: { maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false } }, scales: { y: { ticks: { color: '#FFFFFF' } }, x: { ticks: { color: '#FFFFFF' } } } }
+        }
+    };
+
+    if (chartContexts.messages) new Chart(chartContexts.messages, chartConfigs.messages);
+    if (chartContexts.response) new Chart(chartContexts.response, chartConfigs.response);
+    if (chartContexts.performance) new Chart(chartContexts.performance, chartConfigs.performance);
+    // Funnel chart type might require a plugin for Chart.js v3+
+    // For Chart.js v4, funnel is not a built-in type. You'd need 'chartjs-chart-funnel'.
+    // If you have the plugin: if (chartContexts.conversion && Chart.controllers.funnel) new Chart(chartContexts.conversion, chartConfigs.conversion);
+    // Temporarily disabling funnel chart if plugin is not confirmed to be present or type is wrong
+    console.log("Funnel chart may require 'chartjs-chart-funnel' plugin for Chart.js v3/v4. Conversion chart not rendered if plugin is missing.");
+
+}); // End of DOMContentLoaded
+
+// --- Pricing Logic Helper Functions (should be globally accessible or properly scoped if moved) ---
+// Make sure these are not redeclared if already present elsewhere
+
+const basePrices = {
+    basic: 0.60,
+    premium: 0.70,
+    enterprise: 0.85
+};
+const toolCosts = {
+    basic: 125,
+    premium: 175,
+    enterprise: 250
+};
+const setupCost = 600;
+
+function formatNumber(num) {
+    return new Intl.NumberFormat('de-DE').format(num);
+}
+
+function updateSliderBackground() {
+    const dmSlider = document.getElementById('dmSlider'); // Get it here as it might be called before DOMContentLoaded variable is set
+    if (!dmSlider) return;
+    const value = (dmSlider.value - dmSlider.min) / (dmSlider.max - dmSlider.min) * 100;
+    dmSlider.style.background = `linear-gradient(to right, var(--primary-color) ${value}%, rgba(255, 255, 255, 0.1) ${value}%)`;
+}
+
+function updatePricing() {
+    const activePackageTab = document.querySelector('.pricing-tab.active');
+    const activeDurationOption = document.querySelector('.duration-option.active');
+    const dmSlider = document.getElementById('dmSlider'); // Get it here as well
+
+    if (!activePackageTab || !activeDurationOption || !dmSlider) {
+        return;
+    }
+
+    const packageType = activePackageTab.getAttribute('data-package');
+    const duration = parseInt(activeDurationOption.getAttribute('data-duration'));
+    const discount = parseInt(activeDurationOption.getAttribute('data-discount')) / 100;
+    const numDMs = parseInt(dmSlider.value);
+
+    const pricePerDM = basePrices[packageType] || 0;
+    const currentToolCosts = toolCosts[packageType] || 0;
+
+    let monthlyDMcost = numDMs * pricePerDM;
+    let monthlyTotal = monthlyDMcost + currentToolCosts;
+    monthlyTotal = monthlyTotal * (1 - discount);
+
+    let totalCost = (monthlyTotal * duration) + setupCost;
+
+    // Cache DOM elements for summary update
+    const summaryPackageEl = document.getElementById('summaryPackage');
+    const summaryDurationEl = document.getElementById('summaryDuration');
+    const summaryDMsEl = document.getElementById('summaryDMs');
+    const summaryToolCostsEl = document.getElementById('summaryToolCosts');
+    const summarySetupCostsEl = document.getElementById('summarySetupCosts');
+    const summaryMonthlyPriceEl = document.getElementById('summaryMonthlyPrice');
+    const summaryTotalPriceEl = document.getElementById('summaryTotalPrice');
+
+    if (summaryPackageEl) summaryPackageEl.textContent = activePackageTab.querySelector('h3').textContent;
+    if (summaryDurationEl) summaryDurationEl.textContent = `${duration} Monate`;
+    if (summaryDMsEl) summaryDMsEl.textContent = `${formatNumber(numDMs)} DMs pro Monat`;
+    if (summaryToolCostsEl) summaryToolCostsEl.textContent = `${formatNumber(currentToolCosts)} € pro Monat`;
+    if (summarySetupCostsEl) summarySetupCostsEl.textContent = `${formatNumber(setupCost)} € (einmalig)`;
+    if (summaryMonthlyPriceEl) summaryMonthlyPriceEl.textContent = `${formatNumber(monthlyTotal.toFixed(2))} € pro Monat`;
+    if (summaryTotalPriceEl) summaryTotalPriceEl.textContent = `${formatNumber(totalCost.toFixed(2))} €`;
+}
