@@ -48,6 +48,30 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Hero image 3D hover effect
+    const heroImageContainer = document.querySelector('.hero-image');
+    const heroImage = document.querySelector('.hero-image img');
+
+    if (heroImageContainer && heroImage) {
+        heroImageContainer.addEventListener('mousemove', function (e) {
+            const rect = heroImageContainer.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const rotateX = (y - centerY) / centerY * 10; // Max rotation 10deg
+            const rotateY = (x - centerX) / centerX * -10; // Max rotation 10deg, inverted
+
+            heroImage.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+        });
+
+        heroImageContainer.addEventListener('mouseleave', function () {
+            heroImage.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
+        });
+    }
+
     // Dashboard tabs
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
@@ -338,84 +362,213 @@ Gesamtpreis: ${totalPrice}
     });
 
     // Chart.js initialization
-    // Assuming chart initialization logic is here or called from here
-    // ... (Your existing Chart.js code)
-    const chartContexts = {
-        messages: document.getElementById('messagesChart')?.getContext('2d'),
-        response: document.getElementById('responseRateChart')?.getContext('2d'),
-        performance: document.getElementById('messagePerformanceChart')?.getContext('2d'),
-        conversion: document.getElementById('conversionFunnelChart')?.getContext('2d')
-    };
-
-    const chartConfigs = {
-        messages: {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun'],
-                datasets: [{
-                    label: 'Gesendete Nachrichten',
-                    data: [1200, 1500, 1300, 1800, 2000, 1700],
-                    borderColor: '#FF6B00',
-                    backgroundColor: 'rgba(255, 107, 0, 0.1)',
-                    tension: 0.4,
-                    fill: true
-                }]
-            },
-            options: { maintainAspectRatio: false, plugins: { legend: { labels: { color: '#FFFFFF' } } }, scales: { y: { ticks: { color: '#FFFFFF' } }, x: { ticks: { color: '#FFFFFF' } } } }
-        },
-        response: {
-            type: 'bar',
-            data: {
-                labels: ['Kampagne A', 'Kampagne B', 'Kampagne C'],
-                datasets: [{
-                    label: 'Antwortrate (%)',
-                    data: [25, 35, 30],
-                    backgroundColor: ['rgba(255, 107, 0, 0.7)', 'rgba(255, 31, 142, 0.7)', 'rgba(0, 207, 232, 0.7)'],
-                }]
-            },
-            options: { maintainAspectRatio: false, plugins: { legend: { labels: { color: '#FFFFFF' } } }, scales: { y: { ticks: { color: '#FFFFFF' } }, x: { ticks: { color: '#FFFFFF' } } } }
-        },
-        performance: {
-            type: 'doughnut',
-            data: {
-                labels: ['Text', 'Audio', 'Video'],
-                datasets: [{
-                    data: [40, 30, 30],
-                    backgroundColor: ['#FF6B00', '#FF1F8E', '#00CFE8'],
-                    borderColor: '#0F1524',
-                }]
-            },
-            options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#FFFFFF' } } } }
-        },
-        conversion: {
-            type: 'funnel',
-            data: {
-                labels: ['Gesendet', 'Geöffnet', 'Geantwortet', 'Interessiert', 'Kunde'],
-                datasets: [{
-                    label: 'Conversion Funnel',
-                    data: [3000, 2500, 1500, 600, 200],
-                    backgroundColor: [
-                        'rgba(255, 107, 0, 0.8)',
-                        'rgba(255, 107, 0, 0.6)',
-                        'rgba(255, 107, 0, 0.4)',
-                        'rgba(255, 31, 142, 0.5)',
-                        'rgba(0, 207, 232, 0.6)'
-                    ],
-                    borderColor: '#0F1524'
-                }]
-            },
-            options: { maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false } }, scales: { y: { ticks: { color: '#FFFFFF' } }, x: { ticks: { color: '#FFFFFF' } } } }
+    // Initialize charts if they exist
+    if (typeof Chart !== 'undefined') {
+        // Messages Chart
+        const messagesCtx = document.getElementById('messagesChart');
+        if (messagesCtx) {
+            new Chart(messagesCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'],
+                    datasets: [{
+                        label: 'Gesendete Nachrichten',
+                        data: [120, 190, 230, 250, 280, 190, 150],
+                        borderColor: '#FF6B00',
+                        backgroundColor: 'rgba(255, 107, 0, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.05)'
+                            },
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.05)'
+                            },
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            }
+                        }
+                    }
+                }
+            });
         }
-    };
 
-    if (chartContexts.messages) new Chart(chartContexts.messages, chartConfigs.messages);
-    if (chartContexts.response) new Chart(chartContexts.response, chartConfigs.response);
-    if (chartContexts.performance) new Chart(chartContexts.performance, chartConfigs.performance);
-    // Funnel chart type might require a plugin for Chart.js v3+
-    // For Chart.js v4, funnel is not a built-in type. You'd need 'chartjs-chart-funnel'.
-    // If you have the plugin: if (chartContexts.conversion && Chart.controllers.funnel) new Chart(chartContexts.conversion, chartConfigs.conversion);
-    // Temporarily disabling funnel chart if plugin is not confirmed to be present or type is wrong
-    console.log("Funnel chart may require 'chartjs-chart-funnel' plugin for Chart.js v3/v4. Conversion chart not rendered if plugin is missing.");
+        // Response Rate Chart
+        const responseRateCtx = document.getElementById('responseRateChart');
+        if (responseRateCtx) {
+            new Chart(responseRateCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Antworten', 'Keine Antwort'],
+                    datasets: [{
+                        data: [68, 32],
+                        backgroundColor: [
+                            '#FF1F8E',
+                            'rgba(255, 255, 255, 0.1)'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: 'rgba(255, 255, 255, 0.7)',
+                                padding: 20
+                            }
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        }
+
+        // Message Performance Chart
+        const performanceCtx = document.getElementById('messagePerformanceChart');
+        if (performanceCtx) {
+            new Chart(performanceCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['Antwortrate', 'Conversion', 'Engagement', 'Vertrauen', 'ROI'],
+                    datasets: [
+                        {
+                            label: 'Text',
+                            data: [20, 15, 30, 40, 25],
+                            backgroundColor: 'rgba(255, 107, 0, 0.2)',
+                            borderColor: 'rgba(255, 107, 0, 1)',
+                            pointBackgroundColor: 'rgba(255, 107, 0, 1)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgba(255, 107, 0, 1)'
+                        },
+                        {
+                            label: 'Audio',
+                            data: [40, 30, 50, 60, 45],
+                            backgroundColor: 'rgba(255, 31, 142, 0.2)',
+                            borderColor: 'rgba(255, 31, 142, 1)',
+                            pointBackgroundColor: 'rgba(255, 31, 142, 1)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgba(255, 31, 142, 1)'
+                        },
+                        {
+                            label: 'Video',
+                            data: [60, 50, 70, 80, 65],
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgba(75, 192, 192, 1)'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            pointLabels: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            },
+                            ticks: {
+                                backdropColor: 'transparent',
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Conversion Funnel Chart
+        const conversionCtx = document.getElementById('conversionFunnelChart');
+        if (conversionCtx) {
+            new Chart(conversionCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Gesendete DMs', 'Geöffnet', 'Beantwortet', 'Gespräch', 'Termin', 'Kunde'],
+                    datasets: [{
+                        label: 'Conversion Funnel',
+                        data: [1000, 850, 580, 320, 180, 75],
+                        backgroundColor: [
+                            'rgba(255, 107, 0, 0.8)',
+                            'rgba(255, 107, 0, 0.7)',
+                            'rgba(255, 107, 0, 0.6)',
+                            'rgba(255, 31, 142, 0.6)',
+                            'rgba(255, 31, 142, 0.7)',
+                            'rgba(255, 31, 142, 0.8)'
+                        ],
+                        borderWidth: 0,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.05)'
+                            },
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            }
+                        },
+                        y: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    }
 
 }); // End of DOMContentLoaded
 

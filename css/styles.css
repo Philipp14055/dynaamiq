@@ -292,12 +292,14 @@ img {
 .hero-image {
   position: relative;
   text-align: right;
+  perspective: 1000px;
 }
 
 .hero-image img {
-  max-width: 100%;
+  max-width: 90%;
   border-radius: 20px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  transition: transform 0.1s ease-out;
 }
 
 /* Challenges Section */
