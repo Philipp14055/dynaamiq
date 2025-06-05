@@ -576,14 +576,14 @@ Gesamtpreis: ${totalPrice}
 // Make sure these are not redeclared if already present elsewhere
 
 const basePrices = {
-    basic: 0.60,
-    premium: 0.70,
-    enterprise: 0.85
+    basic: 750 / 2250, // Premium Connect: 750€ für 2250 DMs
+    premium: 1250 / 2250, // Audio Impact: 1250€ für 2250 DMs
+    enterprise: 1750 / 2250 // Ultimate Conversion: 1750€ für 2250 DMs
 };
 const toolCosts = {
-    basic: 125,
-    premium: 175,
-    enterprise: 250
+    basic: 150,
+    premium: 150,
+    enterprise: 150
 };
 const setupCost = 600;
 
