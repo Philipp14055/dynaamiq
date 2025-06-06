@@ -575,16 +575,27 @@ Gesamtpreis: ${totalPrice}
 // --- Pricing Logic Helper Functions (should be globally accessible or properly scoped if moved) ---
 // Make sure these are not redeclared if already present elsewhere
 
-const basePrices = {
-    basic: 750 / 2250, // Premium Connect: 750€ für 2250 DMs
-    premium: 1250 / 2250, // Audio Impact: 1250€ für 2250 DMs
-    enterprise: 1750 / 2250 // Ultimate Conversion: 1750€ für 2250 DMs
+const packageInfo = {
+    basic: {
+        name: "Premium Connect",
+        basePrice: 750,
+        baseDMs: 2250,
+        toolCost: 150
+    },
+    premium: {
+        name: "Audio Impact",
+        basePrice: 1250,
+        baseDMs: 2250,
+        toolCost: 150
+    },
+    enterprise: {
+        name: "Ultimate Conversion",
+        basePrice: 1750,
+        baseDMs: 2250,
+        toolCost: 150
+    }
 };
-const toolCosts = {
-    basic: 150,
-    premium: 150,
-    enterprise: 150
-};
+
 const setupCost = 600;
 
 function formatNumber(num) {
@@ -612,8 +623,14 @@ function updatePricing() {
     const discount = parseInt(activeDurationOption.getAttribute('data-discount')) / 100;
     const numDMs = parseInt(dmSlider.value);
 
-    const pricePerDM = basePrices[packageType] || 0;
-    const currentToolCosts = toolCosts[packageType] || 0;
+    const currentPackage = packageInfo[packageType];
+    if (!currentPackage) {
+        console.error("Invalid package type selected:", packageType);
+        return;
+    }
+
+    const pricePerDM = currentPackage.basePrice / currentPackage.baseDMs;
+    const currentToolCosts = currentPackage.toolCost;
 
     let monthlyDMcost = numDMs * pricePerDM;
     let monthlyTotal = monthlyDMcost + currentToolCosts;
