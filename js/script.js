@@ -578,25 +578,26 @@ Gesamtpreis: ${totalPrice}
 const packageInfo = {
     basic: {
         name: "Premium Connect",
-        basePrice: 750,
+        basePrice: 750, // for 2250 DMs
         baseDMs: 2250,
-        toolCost: 150
+        incrementPrice: 85, // per 250 DMs
+        setupCost: 600
     },
     premium: {
         name: "Audio Impact",
-        basePrice: 1250,
+        basePrice: 1250, // for 2250 DMs
         baseDMs: 2250,
-        toolCost: 150
+        incrementPrice: 140, // per 250 DMs
+        setupCost: 800
     },
     enterprise: {
         name: "Ultimate Conversion",
-        basePrice: 1750,
+        basePrice: 1750, // for 2250 DMs
         baseDMs: 2250,
-        toolCost: 150
+        incrementPrice: 195, // per 250 DMs
+        setupCost: 1000
     }
 };
-
-const setupCost = 600;
 
 function formatNumber(num) {
     return new Intl.NumberFormat('de-DE').format(num);
@@ -620,7 +621,8 @@ function updatePricing() {
 
     const packageType = activePackageTab.getAttribute('data-package');
     const duration = parseInt(activeDurationOption.getAttribute('data-duration'));
-    const discount = parseInt(activeDurationOption.getAttribute('data-discount')) / 100;
+    const discountPercent = parseInt(activeDurationOption.getAttribute('data-discount'));
+    const discount = discountPercent / 100;
     const numDMs = parseInt(dmSlider.value);
 
     const currentPackage = packageInfo[packageType];
@@ -629,29 +631,41 @@ function updatePricing() {
         return;
     }
 
-    const pricePerDM = currentPackage.basePrice / currentPackage.baseDMs;
-    const currentToolCosts = currentPackage.toolCost;
+    const dmSteps = (numDMs - currentPackage.baseDMs) / 250;
+    const baseMonthlyPrice = currentPackage.basePrice + (dmSteps * currentPackage.incrementPrice);
 
-    let monthlyDMcost = numDMs * pricePerDM;
-    let monthlyTotal = monthlyDMcost + currentToolCosts;
-    monthlyTotal = monthlyTotal * (1 - discount);
+    const currentSetupCost = currentPackage.setupCost;
 
-    let totalCost = (monthlyTotal * duration) + setupCost;
+    const discountedMonthlyPrice = baseMonthlyPrice * (1 - discount);
+
+    const totalCost = (discountedMonthlyPrice * duration) + currentSetupCost;
+
+    const totalDiscountAmount = (baseMonthlyPrice * duration) * discount;
 
     // Cache DOM elements for summary update
     const summaryPackageEl = document.getElementById('summaryPackage');
     const summaryDurationEl = document.getElementById('summaryDuration');
     const summaryDMsEl = document.getElementById('summaryDMs');
-    const summaryToolCostsEl = document.getElementById('summaryToolCosts');
     const summarySetupCostsEl = document.getElementById('summarySetupCosts');
     const summaryMonthlyPriceEl = document.getElementById('summaryMonthlyPrice');
     const summaryTotalPriceEl = document.getElementById('summaryTotalPrice');
+    const summaryDiscountRowEl = document.getElementById('summaryDiscountRow');
+    const summaryDiscountPercentageEl = document.getElementById('summaryDiscountPercentage');
+    const summaryDiscountValueEl = document.getElementById('summaryDiscountValue');
+
 
     if (summaryPackageEl) summaryPackageEl.textContent = activePackageTab.querySelector('h3').textContent;
     if (summaryDurationEl) summaryDurationEl.textContent = `${duration} Monate`;
     if (summaryDMsEl) summaryDMsEl.textContent = `${formatNumber(numDMs)} DMs pro Monat`;
-    if (summaryToolCostsEl) summaryToolCostsEl.textContent = `${formatNumber(currentToolCosts)} € pro Monat`;
-    if (summarySetupCostsEl) summarySetupCostsEl.textContent = `${formatNumber(setupCost)} € (einmalig)`;
-    if (summaryMonthlyPriceEl) summaryMonthlyPriceEl.textContent = `${formatNumber(monthlyTotal.toFixed(2))} € pro Monat`;
-    if (summaryTotalPriceEl) summaryTotalPriceEl.textContent = `${formatNumber(totalCost.toFixed(2))} €`;
+    if (summarySetupCostsEl) summarySetupCostsEl.textContent = `${formatNumber(currentSetupCost)} € (einmalig)`;
+    if (summaryMonthlyPriceEl) summaryMonthlyPriceEl.textContent = `${formatNumber(Math.round(discountedMonthlyPrice))} € pro Monat`;
+    if (summaryTotalPriceEl) summaryTotalPriceEl.textContent = `${formatNumber(Math.round(totalCost))} €`;
+
+    if (discountPercent > 0) {
+        if (summaryDiscountRowEl) summaryDiscountRowEl.style.display = 'flex';
+        if (summaryDiscountPercentageEl) summaryDiscountPercentageEl.textContent = discountPercent;
+        if (summaryDiscountValueEl) summaryDiscountValueEl.textContent = `- ${formatNumber(Math.round(totalDiscountAmount))} €`;
+    } else {
+        if (summaryDiscountRowEl) summaryDiscountRowEl.style.display = 'none';
+    }
 }
