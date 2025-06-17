@@ -293,10 +293,20 @@ img {
   position: relative;
   text-align: right;
   perspective: 1000px;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-screenshot {
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 .hero-image img {
-  max-width: 90%;
+  max-width: 100%;
+  height: auto;
   border-radius: 20px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
   transition: transform 0.1s ease-out;
